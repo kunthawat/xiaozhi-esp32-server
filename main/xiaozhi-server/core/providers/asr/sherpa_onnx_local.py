@@ -47,7 +47,8 @@ class ASRProvider(ASRProviderBase):
 
         # 初始化模型文件路径
         model_files = {
-            "model.int8.onnx": os.path.join(self.model_dir, "model.int8.onnx"),
+            "encoder-epoch-12-avg-5.int8.onnx": os.path.join(self.model_dir, "encoder-epoch-12-avg-5.int8.onnx"),
+            "decoder-epoch-12-avg-5.int8.onnx": os.path.join(self.model_dir, "decoder-epoch-12-avg-5.int8.onnx"),
             "tokens.txt": os.path.join(self.model_dir, "tokens.txt"),
         }
 
@@ -65,7 +66,7 @@ class ASRProvider(ASRProviderBase):
                     if not os.path.isfile(file_path):
                         raise FileNotFoundError(f"模型文件下载失败: {file_path}")
 
-            self.model_path = model_files["model.int8.onnx"]
+            self.model_path = model_files["encoder-epoch-12-avg-5.int8.onnx"]
             self.tokens_path = model_files["tokens.txt"]
 
         except Exception as e:
