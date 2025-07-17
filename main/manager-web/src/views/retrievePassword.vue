@@ -1,7 +1,7 @@
 <template>
   <div class="welcome" @keyup.enter="retrievePassword">
     <el-container style="height: 100%;">
-      <!-- Keep the saer -->
+      <!-- Keep the same header -->
       <el-header>
         <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
           <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
@@ -14,83 +14,83 @@
       <el-main style="position: relative;">
         <form @submit.prevent="retrievePassword">
           <div class="login-box">
-            <!-- Modified tion -->
+            <!-- Modified title section -->
             <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
               <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
-              <div class="login-text">Reset Passv>
+              <div class="login-text">Reset Password</div>
               <div class="login-welcome">
                 PASSWORD RETRIEVE
               </div>
             </div>
 
             <div style="padding: 0 30px;">
-              <!-- Mobile nunput -->
+              <!-- Mobile number input -->
               <div class="input-box">
                 <div style="display: flex; align-items: center; width: 100%;">
                   <el-select v-model="form.areaCode" style="width: 220px; margin-right: 10px;">
                     <el-option v-for="item in mobileAreaList" :key="item.key" :label="`${item.name} (${item.key})`"
                       :value="item.key" />
                   </el-select>
-                  <el-input v-model="form.mobile" placeholder="Enter mobil" />
+                  <el-input v-model="form.mobile" placeholder="Enter mobile number" />
                 </div>
               </div>
 
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
-                  <el-input v-model="form.captcha" placeholder="Enter captcha" style="flex:>
+                  <el-input v-model="form.captcha" placeholder="Enter captcha" style="flex: 1;" />
                 </div>
                 <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="Captcha"
                   style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
               </div>
 
-              <!-- Mobile ve
+              <!-- Mobile verification code -->
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
-                  <el-input v-model="form.mobileCaptcha" placeholder="Enter SMS verification code" style="flex: 1/>
+                  <el-input v-model="form.mobileCaptcha" placeholder="Enter SMS verification code" style="flex: 1;" maxlength="6" />
                 </div>
                 <el-button type="primary" class="send-captcha-btn" :disabled="!canSendMobileCaptcha"
                   @click="sendMobileCaptcha">
                   <span>
-                    {{ countdown > 0 ? `Retry in ${countdown}s` : 'Sene' }}
+                    {{ countdown > 0 ? `Retry in ${countdown}s` : 'Send Code' }}
                   </span>
                 </el-button>
               </div>
 
-              <!-- New pasword -->
+              <!-- New password -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
-                <el-input v-model="form.newPassword" placeholder="Enter new password" type="" />
+                <el-input v-model="form.newPassword" placeholder="Enter new password" type="password" />
               </div>
 
-              <!-- Confirm n-->
+              <!-- Confirm new password -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
-                <el-input v-model="form.confirmPassword" placeholder="Confirm new password" typerd" />
+                <el-input v-model="form.confirmPassword" placeholder="Confirm new password" type="password" />
               </div>
 
-              <!-- Modified b
+              <!-- Modified bottom link -->
               <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
-                <div style="cursor: pointer;" @click="goToLogin">Return to 
+                <div style="cursor: pointer;" @click="goToLogin">Return to login</div>
               </div>
             </div>
 
-            <!-- Modified b
-            <div class="login-btn" @click="retrievePassword">Reset Passv>
+            <!-- Modified button text -->
+            <div class="login-btn" @click="retrievePassword">Reset Password</div>
 
-            <!-- Keep the same-->
+            <!-- Keep the same agreement declaration -->
             <div style="font-size: 14px;color: #979db1;">
-              Bye
-              <div style="display: inline-block;color: #5778FF;cursor: pointer;">User Agreemediv>
-              ad
-              <div style="display: inline-block;color: #5778FF;cursor: pointer;">Privacy Poli
+              By continuing, you agree to the
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">User Agreement</div>
+              and
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">Privacy Policy</div>
             </div>
           </div>
         </form>
       </el-main>
 
-      <!-- Keep the sa-->
+      <!-- Keep the same footer -->
       <el-footer>
         <version-footer />
       </el-footer>
@@ -138,22 +138,21 @@ export default {
     this.fetchCaptcha();
   },
   methods: {
-    // Reuse cap
+    // Reuse captcha fetch method
     fetchCaptcha() {
       this.form.captchaId = getUUID();
       Api.user.getCaptcha(this.form.captchaId, (res) => {
         if (res.status === 200) {
           const blob = new Blob([res.data], { type: res.data.type });
           this.captchaUrl = URL.createObjectURL(blob);
-
         } else {
-          console.error('Captcha loading er
-          showDanger('Failed to load );
+          console.error('Captcha loading error');
+          showDanger('Failed to load captcha, click to refresh');
         }
       });
     },
 
-    // Input vaic
+    // Input validation logic
     validateInput(input, message) {
       if (!input.trim()) {
         showDanger(message);
@@ -162,26 +161,26 @@ export default {
       return true;
     },
 
-    // Send moe
+    // Send mobile verification code
     sendMobileCaptcha() {
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
-        showDanger('Please enter ');
+        showDanger('Please enter a valid mobile number');
         return;
       }
 
-      // Validatha
-      if (!this.validateInput(this.form.captcha, 'Please enter ) {
+      // Validate captcha
+      if (!this.validateInput(this.form.captcha, 'Please enter the captcha')) {
         this.fetchCaptcha();
         return;
       }
 
-      // Clear any etimer
+      // Clear any existing timer
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
 
-      // Startntdown
+      // Start countdown
       this.countdown = 60;
       this.timer = setInterval(() => {
         if (this.countdown > 0) {
@@ -192,37 +191,37 @@ export default {
         }
       }, 1000);
 
-      // Call sendI
+      // Call send verification code API
       Api.user.sendSmsVerification({
         phone: this.form.areaCode + this.form.mobile,
         captcha: this.form.captcha,
         captchaId: this.form.captchaId
       }, (res) => {
-        showSuccess('Verificati
+        showSuccess('Verification code sent successfully');
       }, (err) => {
-        showDanger(err.data.msg || 'Failed to 
+        showDanger(err.data.msg || 'Failed to send verification code');
         this.countdown = 0;
         this.fetchCaptcha();
       });
     },
 
-    // Reseword logic
+    // Reset password logic
     retrievePassword() {
-      // Valic
+      // Validation logic
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
-        showDanger('Please enter er');
+        showDanger('Please enter a valid mobile number');
         return;
       }
       if (!this.form.captcha) {
-        showDanger('Please ente');
+        showDanger('Please enter the captcha');
         return;
       }
       if (!this.form.mobileCaptcha) {
-        showDanger('Please ente;
+        showDanger('Please enter the SMS verification code');
         return;
       }
       if (this.form.newPassword !== this.form.confirmPassword) {
-        showDanger('Passwords do 
+        showDanger('Passwords do not match');
         return;
       }
 
@@ -231,10 +230,10 @@ export default {
         password: this.form.newPassword,
         code: this.form.mobileCaptcha
       }, (res) => {
-        showSuccess('Password sful');
+        showSuccess('Password reset successful');
         goToPage('/login');
       }, (err) => {
-        showDanger(err.data.msg || 'Reset f;
+        showDanger(err.data.msg || 'Reset failed');
         if (err.data != null && err.data.msg != null && err.data.msg.indexOf('图形验证码') > -1) {
           this.fetchCaptcha()
         }

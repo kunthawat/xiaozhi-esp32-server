@@ -6,45 +6,45 @@
       <h2 class="page-title">{{ modelTypeText }}</h2>
       <div class="action-group">
         <div class="search-group">
-          <el-input placeholder="Enter model name to search" v-model="search" class="searchle
+          <el-input placeholder="Enter model name to search" v-model="search" class="search-input" clearable
             @keyup.enter.native="handleSearch" style="width: 240px" />
           <el-button class="btn-search" @click="handleSearch">
-            Sech
+            Search
           </el-button>
         </div>
       </div>
     </div>
 
-    <!-- Main con
+    <!-- Main content -->
     <div class="main-wrapper">
       <div class="content-panel">
-        <!-- Left nav
+        <!-- Left navigation -->
         <el-menu :default-active="activeTab" class="nav-panel" @select="handleMenuSelect"
           style="background-size: cover; background-position: center;">
           <el-menu-item index="vad">
-            <span class="menu-text">Voice Activiton</span>
+            <span class="menu-text">Voice Activity Detection</span>
           </el-menu-item>
           <el-menu-item index="asr">
-            <span class="menu-text">Speech Reco
+            <span class="menu-text">Speech Recognition</span>
           </el-menu-item>
           <el-menu-item index="llm">
-            <span class="menu-text">Large Languapan>
+            <span class="menu-text">Large Language Model</span>
           </el-menu-item>
           <el-menu-item index="vllm">
-            <span class="menu-text">Vision Langu/span>
+            <span class="menu-text">Vision Language Model</span>
           </el-menu-item>
           <el-menu-item index="intent">
-            <span class="menu-text">Intent Reco>
+            <span class="menu-text">Intent Recognition</span>
           </el-menu-item>
           <el-menu-item index="tts">
-            <span class="menu-text">Text to Spespan>
+            <span class="menu-text">Text to Speech</span>
           </el-menu-item>
           <el-menu-item index="memory">
-            <span class="menu-text">Memory</s>
+            <span class="menu-text">Memory</span>
           </el-menu-item>
         </el-menu>
 
-        <!-- Right cot -->
+        <!-- Right content -->
         <div class="content-area">
           <el-card class="model-card" shadow="never">
             <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="Loading"
@@ -53,14 +53,14 @@
               header-row-class-name="table-header" :header-cell-class-name="headerCellClassName"
               @selection-change="handleSelectionChange">
               <el-table-column type="selection" width="55" align="center"></el-table-column>
-              <el-table-column label="Model ID" prop="id" align="center"></el-table-col
-              <el-table-column label="Model Name" prop="modelName" align="center"></el-table-cn>
+              <el-table-column label="Model ID" prop="id" align="center"></el-table-column>
+              <el-table-column label="Model Name" prop="modelName" align="center"></el-table-column>
               <el-table-column label="Provider" align="center">
                 <template slot-scope="scope">
                   {{ scope.row.configJson.type || 'Unknown' }}
                 </template>
               </el-table-column>
-              <el-table-column label="Enabled" align="cente
+              <el-table-column label="Enabled" align="center">
                 <template slot-scope="scope">
                   <el-switch v-model="scope.row.isEnabled" class="custom-switch" :active-value="1" :inactive-value="0"
                     @change="handleStatusChange(scope.row)" />
@@ -72,20 +72,20 @@
                     @change="handleDefaultChange(scope.row)" />
                 </template>
               </el-table-column>
-              <el-table-column v-if="activeTab === 'tts'" label="Voice Management" ali">
+              <el-table-column v-if="activeTab === 'tts'" label="Voice Management" align="center">
                 <template slot-scope="scope">
                   <el-button type="text" size="mini" @click="openTtsDialog(scope.row)" class="voice-management-btn">
-                    Manaices
+                    Manage Voices
                   </el-button>
                 </template>
               </el-table-column>
-              <el-table-column label="Actions" align="center" width="15>
+              <el-table-column label="Actions" align="center" width="150px">
                 <template slot-scope="scope">
                   <el-button type="text" size="mini" @click="editModel(scope.row)" class="edit-btn">
                     Edit
                   </el-button>
                   <el-button type="text" size="mini" @click="deleteModel(scope.row)" class="delete-btn">
-                    Dete
+                    Delete
                   </el-button>
                 </template>
               </el-table-column>
@@ -94,7 +94,7 @@
               <div class="batch-actions">
                 <el-button size="mini" type="primary" @click="selectAll">
                   {{ isAllSelected ?
-                    'Deselect All' :}}
+                    'Deselect All' : 'Select All' }}
                 </el-button>
                 <el-button type="success" size="mini" @click="addModel" class="add-btn">
                   Add
@@ -106,20 +106,20 @@
               <div class="custom-pagination">
 
                 <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
-                  <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item} per page`" :value="m">
+                  <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item} per page`" :value="item">
                   </el-option>
                 </el-select>
 
                 <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">First</button>
-                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">Previous</buton>
+                <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">Previous</button>
 
                 <button v-for="page in visiblePages" :key="page" class="pagination-btn"
                   :class="{ active: page === currentPage }" @click="goToPage(page)">
                   {{ page }}
                 </button>
 
-                <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">Next</button
-                <span class="total-text">Total: {{ total }} rec
+                <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">Next</button>
+                <span class="total-text">Total: {{ total }} records</span>
               </div>
             </div>
           </el-card>
@@ -174,15 +174,15 @@ export default {
   computed: {
     modelTypeText() {
       const map = {
-        vad: 'Voice Activity D)',
-        asr: 'Speech Recogn)',
-        llm: 'Large Langua,
-        vllm: 'Vision LanguaVLLM)',
-        intent: 'Intent Recogniti
-        tts: 'Text to SpeecTS)',
+        vad: 'Voice Activity Detection (VAD)',
+        asr: 'Speech Recognition (ASR)',
+        llm: 'Large Language Model (LLM)',
+        vllm: 'Vision Language Model (VLLM)',
+        intent: 'Intent Recognition',
+        tts: 'Text to Speech (TTS)',
         memory: 'Memory Model'
       }
-      return map[this.activeTab] || 'Model'
+      return map[this.activeTab] || 'Model Configuration'
     },
     pageCount() {
       return Math.ceil(this.total / this.pageSize);
@@ -223,24 +223,24 @@ export default {
     },
     handleMenuSelect(index) {
       this.activeTab = index;
-      this.currentPage = 1;  // Reset 
-      this.pageSize = 10;     // Optional:e
+      this.currentPage = 1;  // Reset to first page
+      this.pageSize = 10;     // Optional: reset items per page
       this.loadData();
     },
     handleSearch() {
       this.currentPage = 1;
       this.loadData();
     },
-    // Batcte
+    // Batch delete
     batchDelete() {
       if (this.selectedModels.length === 0) {
-        this.$message.warning('Please selec delete')
+        this.$message.warning('Please select models to delete')
         return
       }
 
-      this.$confirm('Are you sure you want 
+      this.$confirm('Are you sure you want to delete the selected models?', 'Confirm', {
         confirmButtonText: 'Confirm',
-        cancelButtonText: 'Canc
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         const deletePromises = this.selectedModels.map(model =>
@@ -255,19 +255,19 @@ export default {
         Promise.all(deletePromises).then(results => {
           if (results.every(Boolean)) {
             this.$message.success({
-              message: 'Batch dessful',
+              message: 'Batch deletion successful',
               showClose: true
             })
             this.loadData()
           } else {
             this.$message.error({
-              message: 'Some del',
+              message: 'Some deletions failed',
               showClose: true
             })
           }
         })
       }).catch(() => {
-        this.$message.info('Deletio')
+        this.$message.info('Deletion cancelled')
       })
     },
     addModel() {
@@ -277,11 +277,11 @@ export default {
       this.editModelData = JSON.parse(JSON.stringify(model));
       this.editDialogVisible = true;
     },
-    // Delete
+    // Delete single model
     deleteModel(model) {
-      this.$confirm('Are you sure you wanrm', {
-        confirmButtonText: 'Conf',
-        cancelButtonText: 'Canc
+      this.$confirm('Are you sure you want to delete this model?', 'Confirm', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         Api.model.deleteModel(
@@ -289,20 +289,20 @@ export default {
           ({ data }) => {
             if (data.code === 0) {
               this.$message.success({
-                message: 'Deleti
+                message: 'Deletion successful',
                 showClose: true
               })
               this.loadData()
             } else {
               this.$message.error({
-                message: data.msg || 'Deletiailed',
+                message: data.msg || 'Deletion failed',
                 showClose: true
               })
             }
           }
         )
       }).catch(() => {
-        this.$message.info('Deletio)
+        this.$message.info('Deletion cancelled')
       })
     },
     handleCurrentChange(page) {
@@ -317,13 +317,13 @@ export default {
         { modelType, provideCode, id, formData },
         ({ data }) => {
           if (data.code === 0) {
-            this.$message.success('Save su');
+            this.$message.success('Save successful');
             this.loadData();
             this.editDialogVisible = false;
           } else {
-            this.$message.error(data.msg || 'Save fa;
+            this.$message.error(data.msg || 'Save failed');
           }
-          done && done(); // Call done call
+          done && done(); // Call done callback to close loading state
         }
       );
     },
@@ -342,7 +342,7 @@ export default {
       }
     },
 
-    // Add neuration
+    // Add new model configuration
     handleAddConfirm(newModel) {
       const params = {
         modelType: this.activeTab,
@@ -358,20 +358,20 @@ export default {
       Api.model.addModel(params, ({ data }) => {
         if (data.code === 0) {
           this.$message.success({
-            message: 'Added 
+            message: 'Added successfully',
             showClose: true
           });
           this.loadData();
         } else {
           this.$message.error({
-            message: data.msg || 'Add faled',
+            message: data.msg || 'Add failed',
             showClose: true
           });
         }
       });
     },
 
-    // Pagation
+    // Pagination
     goFirst() {
       this.currentPage = 1;
       this.loadData();
@@ -393,9 +393,9 @@ export default {
       this.loadData();
     },
 
-    // Get modeon list
+    // Get model configuration list
     loadData() {
-      this.loading = true; // Star
+      this.loading = true; // Start loading
       const params = {
         modelType: this.activeTab,
         modelName: this.search,
@@ -404,16 +404,16 @@ export default {
       };
 
       Api.model.getModelList(params, ({ data }) => {
-        this.loading = false; // End ding
+        this.loading = false; // End loading
         if (data.code === 0) {
           this.modelList = data.data.list;
           this.total = data.data.total;
         } else {
-          this.$message.error(data.msg || 'Failed to g;
+          this.$message.error(data.msg || 'Failed to get model list');
         }
       });
     },
-    // Handle enabge
+    // Handle enable/disable status change
     handleStatusChange(model) {
       const newStatus = model.isEnabled ? 1 : 0
       const originalStatus = model.isEnabled
@@ -425,13 +425,13 @@ export default {
         newStatus,
         ({ data }) => {
           if (data.code === 0) {
-            this.$message.success(newStatus === 1 ? 'Enabled successy')
-            // Keep tatus
+            this.$message.success(newStatus === 1 ? 'Enabled successfully' : 'Disabled successfully')
+            // Keep new status
             model.isEnabled = newStatus
           } else {
-            // Restore or failure
+            // Restore original status on failure
             model.isEnabled = originalStatus
-            this.$message.error(data.msg || 'Operat
+            this.$message.error(data.msg || 'Operation failed')
           }
         }
       )
@@ -439,7 +439,7 @@ export default {
     handleDefaultChange(model) {
       Api.model.setDefaultModel(model.id, ({ data }) => {
         if (data.code === 0) {
-          this.$message.success('Default mo
+          this.$message.success('Default model set successfully')
           this.loadData()
         }
       })
@@ -808,7 +808,7 @@ export default {
 
 .voice-management-btn:hover {
   background: #8aa2e0;
-  /* Darker col */
+  /* Darker color on hover */
   transform: scale(1.05);
 }
 
@@ -831,13 +831,13 @@ export default {
   padding-right: 10px;
 }
 
-/* Paginan */
+/* Pagination */
 .custom-pagination {
   display: flex;
   align-items: center;
   gap: 8px;
 
-  /* Navigation button styl/
+  /* Navigation button styles (First, Previous, Next) */
   .pagination-btn:first-child,
   .pagination-btn:nth-child(2),
   .pagination-btn:nth-child(3),
@@ -863,7 +863,7 @@ export default {
     }
   }
 
-  /* Number bues */
+  /* Number button styles */
   .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
     min-width: 28px;
     height: 32px;
