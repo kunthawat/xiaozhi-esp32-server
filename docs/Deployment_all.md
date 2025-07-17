@@ -1,63 +1,59 @@
-# 部署架构图
-![请参考-全模块安装架构图](../docs/images/deploy2.png)
-# 方式一：Docker运行全模块
-docker镜像已支持x86架构、arm64架构的CPU，支持在国产操作系统上运行。
+# Deployment Architecture Diagram
+![Reference - Full Module Installation Architecture Diagram](../docs/images/deploy2.png)
 
-## 1. 安装docker
+# Method 1: Docker Full Module Deployment
+Docker images support x86 architecture, arm64 architecture CPUs, and can run on various operating systems.
 
-如果您的电脑还没安装docker，可以按照这里的教程安装：[docker安装](https://www.runoob.com/docker/ubuntu-docker-install.html)
+## 1. Install Docker
 
-#### 1.1 创建目录
+If you haven't installed Docker on your computer yet, you can follow this tutorial: [Docker Installation](https://docs.docker.com/engine/install/)
 
-安装完后，你需要为这个项目找一个安放配置文件的目录，例如我们可以新建一个文件夹叫`xiaozhi-server`。
+#### 1.1 Create Directories
 
-创建好目录后，你需要在`xiaozhi-server`下面创建`data`文件夹和`models`文件夹，`models`下面还要再创建`SenseVoiceSmall`文件夹。
+After installation, you need to find a directory to store the configuration files for this project. For example, we can create a new folder called `xiaozhi-server`.
 
-最终目录结构如下所示：
+After creating the directory, you need to create `data`, `models`, and `whisper_cache` folders under `xiaozhi-server`. Under the `models` folder, create another folder called `SenseVoiceSmall`.
+
+The final directory structure should look like this:
 
 ```
 xiaozhi-server
   ├─ data
   ├─ models
      ├─ SenseVoiceSmall
+  ├─ whisper_cache
 ```
 
-#### 1.2 下载语音识别模型文件
+#### 1.2 Download Speech Recognition Model Files
 
-本项目语音识别模型，默认使用`SenseVoiceSmall`模型，进行语音转文字。因为模型较大，需要独立下载，下载后把`model.pt`
-文件放在`models/SenseVoiceSmall`
-目录下。下面两个下载路线任选一个。
+This project uses the `SenseVoiceSmall` model for speech-to-text by default. Because the model is large, it needs to be downloaded separately. After downloading, place the `model.pt` file in the `models/SenseVoiceSmall` directory. Choose one of the following download routes:
 
-- 线路一：阿里魔塔下载[SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt)
-- 线路二：百度网盘下载[SenseVoiceSmall](https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg&pwd=qvna) 提取码:
-  `qvna`
+- Route 1: Download from Alibaba ModelScope [SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt)
+- Route 2: Download from Baidu Netdisk [SenseVoiceSmall](https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg&pwd=qvna) Extraction code: `qvna`
 
+#### 1.3 Download Configuration Files
 
-#### 1.3 下载配置文件
+You need to download two configuration files: `docker-compose_all.yaml` and `config_from_api.yaml`. These files need to be downloaded from the project repository.
 
-你需要下载两个配置文件：`docker-compose_all.yaml` 和 `config_from_api.yaml`。需要从项目仓库下载这两个文件。
+##### 1.3.1 Download docker-compose_all.yaml
 
-##### 1.3.1 下载 docker-compose_all.yaml
+Open [this link](../main/xiaozhi-server/docker-compose_all.yml) in your browser.
 
-用浏览器打开[这个链接](../main/xiaozhi-server/docker-compose_all.yml)。
+On the right side of the page, find the `RAW` button. Next to the `RAW` button, find the download icon, click the download button, and download the `docker-compose_all.yml` file. Save the file to your `xiaozhi-server` directory.
 
-在页面的右侧找到名称为`RAW`按钮，在`RAW`按钮的旁边，找到下载的图标，点击下载按钮，下载`docker-compose_all.yml`文件。 把文件下载到你的
-`xiaozhi-server`中。
+Alternatively, you can directly execute `wget https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/refs/heads/main/main/xiaozhi-server/docker-compose_all.yml` to download it.
 
-或者直接执行 `wget https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/refs/heads/main/main/xiaozhi-server/docker-compose_all.yml` 下载。
+After downloading, continue with this tutorial.
 
-下载完后，回到本教程继续往下。
+##### 1.3.2 Download config_from_api.yaml
 
-##### 1.3.2 下载 config_from_api.yaml
+Open [this link](../main/xiaozhi-server/config_from_api.yaml) in your browser.
 
-用浏览器打开[这个链接](../main/xiaozhi-server/config_from_api.yaml)。
+On the right side of the page, find the `RAW` button. Next to the `RAW` button, find the download icon, click the download button, and download the `config_from_api.yaml` file. Save the file to the `data` folder in your `xiaozhi-server` directory, then rename `config_from_api.yaml` to `.config.yaml`.
 
-在页面的右侧找到名称为`RAW`按钮，在`RAW`按钮的旁边，找到下载的图标，点击下载按钮，下载`config_from_api.yaml`文件。 把文件下载到你的
-`xiaozhi-server`下面的`data`文件夹中，然后把`config_from_api.yaml`文件重命名为`.config.yaml`。
+Alternatively, you can directly execute `wget https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/refs/heads/main/main/xiaozhi-server/config_from_api.yaml` to download it.
 
-或者直接执行 `wget https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/refs/heads/main/main/xiaozhi-server/config_from_api.yaml` 下载保存。
-
-下载完配置文件后，我们确认一下整个`xiaozhi-server`里面的文件如下所示：
+After downloading the configuration files, let's confirm that the entire `xiaozhi-server` directory structure looks like this:
 
 ```
 xiaozhi-server
@@ -67,16 +63,17 @@ xiaozhi-server
   ├─ models
      ├─ SenseVoiceSmall
        ├─ model.pt
+  ├─ whisper_cache
 ```
 
-如果你的文件目录结构也是上面的，就继续往下。如果不是，你就再仔细看看是不是漏操作了什么。
+If your directory structure matches the above, continue to the next step. If not, carefully check if you missed any operations.
 
-## 2. 备份数据
+## 2. Backup Data
 
-如果你之前已经成功运行智控台，如果上面保存有你的密钥信息，请先从智控台上拷贝重要数据下来。因为升级过程中，有可能会覆盖原来的数据。
+If you have previously successfully run the Control Panel and have important key information stored there, please copy the important data first. During the upgrade process, there is a possibility that the original data may be overwritten.
 
-## 3. 清除历史版本镜像和容器
-接下来打开命令行工具，使用`终端`或`命令行`工具 进入到你的`xiaozhi-server`，执行以下命令
+## 3. Clear Historical Version Images and Containers
+Next, open a command line tool, use the `terminal` or `command line` tool to enter your `xiaozhi-server` directory, and execute the following commands:
 
 ```
 docker compose -f docker-compose_all.yml down
@@ -97,20 +94,20 @@ docker rmi ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:server_latest
 docker rmi ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:web_latest
 ```
 
-## 4. 运行程序
-执行以下命令启动新版本容器
+## 4. Run the Program
+Execute the following command to start the new version containers:
 
 ```
 docker compose -f docker-compose_all.yml up -d
 ```
 
-执行完后，再执行以下命令，查看日志信息。
+After execution, run the following command to view the log information:
 
 ```
 docker logs -f xiaozhi-esp32-server-web
 ```
 
-当你看到输出日志时，说明你的`智控台`启动成功了。
+When you see the output logs, it means your `Control Panel` has started successfully:
 
 ```
 2025-xx-xx 22:11:12.445 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
@@ -118,123 +115,121 @@ docker logs -f xiaozhi-esp32-server-web
 http://localhost:8002/xiaozhi/doc.html
 ```
 
-请注意此刻仅是`智控台`能运行，如果8000端口`xiaozhi-esp32-server`报错，先不要理会。
+Please note that at this point, only the `Control Panel` is running. If the `xiaozhi-esp32-server` on port 8000 reports an error, don't worry about it yet.
 
-这时，你需要使用浏览器，打开`智控台`，链接：http://127.0.0.1:8002 ，注册第一个用户。第一个用户即是超级管理员，以后的用户都是普通用户。普通用户只能绑定设备和配置智能体;超级管理员可以进行模型管理、用户管理、参数配置等功能。
+Now, you need to use a browser to open the `Control Panel` at: http://127.0.0.1:8002, and register the first user. The first user is the super administrator; subsequent users are regular users. Regular users can only bind devices and configure agents; super administrators can perform model management, user management, parameter configuration, and other functions.
 
-接下来要做三件重要的事情：
+Next, there are three important things to do:
 
-### 第一件重要的事情
+### First Important Task
 
-使用超级管理员账号，登录智控台，在顶部菜单找到`参数管理`，找到列表中第一条数据，参数编码是`server.secret`，复制它到`参数值`。
+Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the first item in the list with parameter code `server.secret`, and copy its `Parameter Value`.
 
-`server.secret`需要说明一下，这个`参数值`很重要，作用是让我们的`Server`端连接`manager-api`。`server.secret`是每次从零部署manager模块时，会自动随机生成的密钥。
+Let me explain `server.secret`: this `Parameter Value` is very important as it allows our `Server` to connect to the `manager-api`. The `server.secret` is a randomly generated key each time the manager module is deployed from scratch.
 
-复制`参数值`后，打开`xiaozhi-server`下的`data`目录的`.config.yaml`文件。此刻你的配置文件内容应该是这样的：
+After copying the `Parameter Value`, open the `.config.yaml` file in the `data` directory of your `xiaozhi-server`. At this point, your configuration file should look like this:
 
 ```
 manager-api:
   url:  http://127.0.0.1:8002/xiaozhi
-  secret: 你的server.secret值
+  secret: your_server.secret_value
 ```
-1、把你刚才从`智控台`复制过来的`server.secret`的`参数值`复制到`.config.yaml`文件里的`secret`里。
+1. Paste the `server.secret` `Parameter Value` you just copied from the `Control Panel` into the `secret` field in the `.config.yaml` file.
 
-2、因为你是docker部署，把`url`改成下面的`http://xiaozhi-esp32-server-web:8002/xiaozhi`
+2. Since you're using Docker deployment, change the `url` to `http://xiaozhi-esp32-server-web:8002/xiaozhi`
 
-3、因为你是docker部署，把`url`改成下面的`http://xiaozhi-esp32-server-web:8002/xiaozhi`
+3. Since you're using Docker deployment, change the `url` to `http://xiaozhi-esp32-server-web:8002/xiaozhi`
 
-4、因为你是docker部署，把`url`改成下面的`http://xiaozhi-esp32-server-web:8002/xiaozhi`
+4. Since you're using Docker deployment, change the `url` to `http://xiaozhi-esp32-server-web:8002/xiaozhi`
 
-类似这样的效果
+The result should look something like this:
 ```
 manager-api:
   url: http://xiaozhi-esp32-server-web:8002/xiaozhi
   secret: 12345678-xxxx-xxxx-xxxx-123456789000
 ```
 
-保存好后，继续往下做第二件重要的事情
+After saving, continue to the second important task.
 
-### 第二件重要的事情
+### Second Important Task
 
-使用超级管理员账号，登录智控台，在顶部菜单找到`模型配置`，然后在左侧栏点击`大语言模型`，找到第一条数据`智谱AI`，点击`修改`按钮，
-弹出修改框后，将你注册到的`智谱AI`的密钥填写到`API密钥`中。然后点击保存。
+Using the super administrator account, log in to the Control Panel, find `Model Configuration` in the top menu, then click on `Large Language Model` in the left sidebar. Find the first item `Zhipu AI`, click the `Modify` button, and in the popup dialog, enter your registered `Zhipu AI` key in the `API Key` field. Then click save.
 
-## 5.重启xiaozhi-esp32-server
+## 5. Restart xiaozhi-esp32-server
 
-接下来打开命令行工具，使用`终端`或`命令行`工具 输入
+Next, open a command line tool, use the `terminal` or `command line` tool and enter:
 ```
 docker restart xiaozhi-esp32-server
 docker logs -f xiaozhi-esp32-server
 ```
-如果你能看到，类似以下日志,则是Server启动成功的标志。
+If you can see logs similar to the following, it indicates that the Server has started successfully:
 
 ```
-25-02-23 12:01:09[core.websocket_server] - INFO - Websocket地址是      ws://xxx.xx.xx.xx:8000/xiaozhi/v1/
-25-02-23 12:01:09[core.websocket_server] - INFO - =======上面的地址是websocket协议地址，请勿用浏览器访问=======
-25-02-23 12:01:09[core.websocket_server] - INFO - 如想测试websocket请用谷歌浏览器打开test目录下的test_page.html
-25-02-23 12:01:09[core.websocket_server] - INFO - =======================================================
+25-02-23 12:01:09[core.websocket_server] - INFO - Websocket address is      ws://xxx.xx.xx.xx:8000/xiaozhi/v1/
+25-02-23 12:01:09[core.websocket_server] - INFO - =======The above address is a websocket protocol address, please do not access it with a browser=======
+25-02-23 12:01:09[core.websocket_server] - INFO - If you want to test websocket, please use Google Chrome to open test_page.html in the test directory
+25-02-23 12:01:09[core.websocket_server] - INFO - =============================================================
 ```
 
-由于你是全模块部署，因此你有两个重要的接口需要写入到esp32中。
+Since you're doing a full module deployment, you have two important interfaces that need to be entered into the ESP32:
 
-OTA接口：
+OTA interface:
 ```
-http://你电脑局域网的ip:8002/xiaozhi/ota/
-```
-
-Websocket接口：
-```
-ws://你电脑局域网的ip:8000/xiaozhi/v1/
+http://your_computer_local_network_ip:8002/xiaozhi/ota/
 ```
 
-### 第三件重要的事情
+Websocket interface:
+```
+ws://your_computer_local_network_ip:8000/xiaozhi/v1/
+```
 
-使用超级管理员账号，登录智控台，在顶部菜单找到`参数管理`，找到参数编码是`server.websocket`，输入你的`Websocket接口`。
+### Third Important Task
 
-使用超级管理员账号，登录智控台，在顶部菜单找到`参数管理`，找到数编码是`server.ota`，输入你的`OTA接口`。
+Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the parameter code `server.websocket`, and enter your `Websocket interface`.
 
-接下来，你就可以开始操作你的esp32设备了，你可以`自行编译esp32固件`也可以配置使用`虾哥编译好的1.6.1以上版本的固件`。两个任选一个
+Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the parameter code `server.ota`, and enter your `OTA interface`.
 
-1、 [编译自己的esp32固件](firmware-build.md)了。
+Now, you can start operating your ESP32 device. You can either `compile your own ESP32 firmware` or configure using `firmware version 1.6.1 or above compiled by Xia Ge`. Choose one of the two:
 
-2、 [基于虾哥编译好的固件配置自定义服务器](firmware-setting.md)了。
+1. [Compile your own ESP32 firmware](firmware-build.md).
 
+2. [Configure a custom server based on firmware compiled by Xia Ge](firmware-setting.md).
 
-# 方式二：本地源码运行全模块
+# Method 2: Local Source Code Full Module Deployment
 
-## 1.安装MySQL数据库
+## 1. Install MySQL Database
 
-如果本机已经安装了MySQL，可以直接在数据库中创建名为`xiaozhi_esp32_server`的数据库。
+If MySQL is already installed on your machine, you can directly create a database named `xiaozhi_esp32_server`:
 
 ```sql
 CREATE DATABASE xiaozhi_esp32_server CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-如果还没有MySQL，你可以通过docker安装mysql
+If you don't have MySQL yet, you can install it using Docker:
 
 ```
 docker run --name xiaozhi-esp32-server-db -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -e MYSQL_DATABASE=xiaozhi_esp32_server -e MYSQL_INITDB_ARGS="--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci" -e TZ=Asia/Shanghai -d mysql:latest
 ```
 
-## 2.安装redis
+## 2. Install Redis
 
-如果还没有Redis，你可以通过docker安装redis
+If you don't have Redis yet, you can install it using Docker:
 
 ```
 docker run --name xiaozhi-esp32-server-redis -d -p 6379:6379 redis
 ```
 
-## 3.运行manager-api程序
+## 3. Run the manager-api Program
 
-3.1 安装JDK21，设置JDK环境变量
+3.1 Install JDK21 and set up JDK environment variables
 
-3.2 安装Maven，设置Maven环境变量
+3.2 Install Maven and set up Maven environment variables
 
-3.3 使用Vscode编程工具，安装好Java环境相关插件
+3.3 Use VSCode programming tool and install Java environment-related plugins
 
-3.4 使用Vscode编程工具加载manager-api模块
+3.4 Use VSCode programming tool to load the manager-api module
 
-在`src/main/resources/application-dev.yml`中配置数据库连接信息
+Configure database connection information in `src/main/resources/application-dev.yml`:
 
 ```
 spring:
@@ -242,7 +237,7 @@ spring:
     username: root
     password: 123456
 ```
-在`src/main/resources/application-dev.yml`中配置Redis连接信息
+Configure Redis connection information in `src/main/resources/application-dev.yml`:
 ```
 spring:
     data:
@@ -253,17 +248,17 @@ spring:
         database: 0
 ```
 
-3.5 运行主程序
+3.5 Run the main program
 
-本项目为SpringBoot项目，启动方式为：
-打开`Application.java`运行`Main`方法启动
+This project is a SpringBoot project. To start it:
+Open `Application.java` and run the `Main` method:
 
 ```
-路径地址：
+Path:
 src/main/java/xiaozhi/AdminApplication.java
 ```
 
-当你看到输出日志时，说明你的`manager-api`启动成功了。
+When you see the output logs, it means your `manager-api` has started successfully:
 
 ```
 2025-xx-xx 22:11:12.445 [main] INFO  c.a.d.s.b.a.DruidDataSourceAutoConfigure - Init DruidDataSource
@@ -271,48 +266,38 @@ src/main/java/xiaozhi/AdminApplication.java
 http://localhost:8002/xiaozhi/doc.html
 ```
 
-## 4.运行manager-web程序
+## 4. Run the manager-web Program
 
-4.1 安装nodejs
+4.1 Install Node.js
 
-4.2 使用Vscode编程工具加载manager-web模块
+4.2 Use VSCode programming tool to load the manager-web module
 
-终端命令进入manager-web目录下
+In the terminal, navigate to the manager-web directory:
 
 ```
 npm install
 ```
-然后启动
+Then start:
 ```
 npm run serve
 ```
 
-请注意，如果你的manager-api的接口不在`http://localhost:8002`，请在开发时，修改
-`main/manager-web/.env.development`中的路径
+Please note, if your manager-api interface is not at `http://localhost:8002`, modify the path in `main/manager-web/.env.development` during development.
 
-运行成功后，你需要使用浏览器，打开`智控台`，链接：http://127.0.0.1:8001 ，注册第一个用户。第一个用户即是超级管理员，以后的用户都是普通用户。普通用户只能绑定设备和配置智能体;超级管理员可以进行模型管理、用户管理、参数配置等功能。
+After running successfully, you need to use a browser to open the `Control Panel` at: http://127.0.0.1:8001, and register the first user. The first user is the super administrator; subsequent users are regular users. Regular users can only bind devices and configure agents; super administrators can perform model management, user management, parameter configuration, and other functions.
 
+Important: After successful registration, using the super administrator account, log in to the Control Panel, find `Model Configuration` in the top menu, then click on `Large Language Model` in the left sidebar. Find the first item `Zhipu AI`, click the `Modify` button, and in the popup dialog, enter your registered `Zhipu AI` key in the `API Key` field. Then click save.
 
-重要：注册成功后，使用超级管理员账号，登录智控台，在顶部菜单找到`模型配置`，然后在左侧栏点击`大语言模型`，找到第一条数据`智谱AI`，点击`修改`按钮，
-弹出修改框后，将你注册到的`智谱AI`的密钥填写到`API密钥`中。然后点击保存。
+## 5. Install Python Environment
 
-重要：注册成功后，使用超级管理员账号，登录智控台，在顶部菜单找到`模型配置`，然后在左侧栏点击`大语言模型`，找到第一条数据`智谱AI`，点击`修改`按钮，
-弹出修改框后，将你注册到的`智谱AI`的密钥填写到`API密钥`中。然后点击保存。
+This project uses `conda` to manage dependency environments. If it's not convenient to install `conda`, you need to install `libopus` and `ffmpeg` according to your operating system.
+If you decide to use `conda`, after installation, start executing the following commands:
 
-重要：注册成功后，使用超级管理员账号，登录智控台，在顶部菜单找到`模型配置`，然后在左侧栏点击`大语言模型`，找到第一条数据`智谱AI`，点击`修改`按钮，
-弹出修改框后，将你注册到的`智谱AI`的密钥填写到`API密钥`中。然后点击保存。
-
-## 5.安装Python环境
-
-本项目使用`conda`管理依赖环境。如果不方便安装`conda`，需要根据实际的操作系统安装好`libopus`和`ffmpeg`。
-如果确定使用`conda`，则安装好后，开始执行以下命令。
-
-重要提示！windows 用户，可以通过安装`Anaconda`来管理环境。安装好`Anaconda`后，在`开始`那里搜索`anaconda`相关的关键词，
-找到`Anaconda Prpmpt`，使用管理员身份运行它。如下图。
+Important note! For Windows users, you can manage environments by installing `Anaconda`. After installing `Anaconda`, search for `anaconda` related keywords in the `Start` menu, find `Anaconda Prompt`, and run it as administrator. As shown below:
 
 ![conda_prompt](./images/conda_env_1.png)
 
-运行之后，如果你能看到命令行窗口前面有一个(base)字样，说明你成功进入了`conda`环境。那么你就可以执行以下命令了。
+After running, if you can see a (base) prefix in front of the command line window, it means you have successfully entered the `conda` environment. Then you can execute the following commands:
 
 ![conda_env](./images/conda_env_2.png)
 
@@ -321,7 +306,7 @@ conda remove -n xiaozhi-esp32-server --all -y
 conda create -n xiaozhi-esp32-server python=3.10 -y
 conda activate xiaozhi-esp32-server
 
-# 添加清华源通道
+# Add Tsinghua mirror channel
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free
 conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
@@ -330,120 +315,218 @@ conda install libopus -y
 conda install ffmpeg -y
 ```
 
-请注意，以上命令，不是一股脑执行就成功的，你需要一步步执行，每一步执行完后，都检查一下输出的日志，查看是否成功。
+Please note that the above commands should not be executed all at once. You need to execute them step by step and check the output logs after each step to see if it was successful.
 
-## 6.安装本项目依赖
+## 6. Install Project Dependencies
 
-你先要下载本项目源码，源码可以通过`git clone`命令下载，如果你不熟悉`git clone`命令。
+First, you need to download the source code of this project. The source code can be downloaded using the `git clone` command. If you are not familiar with the `git clone` command:
 
-你可以用浏览器打开这个地址`https://github.com/xinnan-tech/xiaozhi-esp32-server.git`
+You can open this address in your browser: `https://github.com/xinnan-tech/xiaozhi-esp32-server.git`
 
-打开完，找到页面中一个绿色的按钮，写着`Code`的按钮，点开它，然后你就看到`Download ZIP`的按钮。
+After opening, find a green button labeled `Code`, click it, and you'll see a `Download ZIP` button.
 
-点击它，下载本项目源码压缩包。下载到你电脑后，解压它，此时它的名字可能叫`xiaozhi-esp32-server-main`
-你需要把它重命名成`xiaozhi-esp32-server`，在这个文件里，进入到`main`文件夹，再进入到`xiaozhi-server`，好了请记住这个目录`xiaozhi-server`。
+Click it to download the project source code as a ZIP file. After downloading to your computer, extract it. At this point, it might be named `xiaozhi-esp32-server-main`.
+You need to rename it to `xiaozhi-esp32-server`, enter the `main` folder, then enter the `xiaozhi-server` folder. Please remember this directory: `xiaozhi-server`.
 
 ```
-# 继续使用conda环境
+# Continue using the conda environment
 conda activate xiaozhi-esp32-server
-# 进入到你的项目根目录，再进入main/xiaozhi-server
+# Enter your project root directory, then enter main/xiaozhi-server
 cd main/xiaozhi-server
 pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 pip install -r requirements.txt
+pip install -r requirements-whisper.txt
 ```
 
-### 7.下载语音识别模型文件
+### 7. Download Speech Recognition Model Files
 
-本项目语音识别模型，默认使用`SenseVoiceSmall`模型，进行语音转文字。因为模型较大，需要独立下载，下载后把`model.pt`
-文件放在`models/SenseVoiceSmall`
-目录下。下面两个下载路线任选一个。
+This project uses the `SenseVoiceSmall` model for speech-to-text by default. Because the model is large, it needs to be downloaded separately. After downloading, place the `model.pt` file in the `models/SenseVoiceSmall` directory. Choose one of the following download routes:
 
-- 线路一：阿里魔塔下载[SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt)
-- 线路二：百度网盘下载[SenseVoiceSmall](https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg&pwd=qvna) 提取码:
-  `qvna`
+- Route 1: Download from Alibaba ModelScope [SenseVoiceSmall](https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt)
+- Route 2: Download from Baidu Netdisk [SenseVoiceSmall](https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg&pwd=qvna) Extraction code: `qvna`
 
-## 8.配置项目文件
+## 8. Configure Project Files
 
-使用超级管理员账号，登录智控台 ，在顶部菜单找到`参数管理`，找到列表中第一条数据，参数编码是`server.secret`，复制它到`参数值`。
+Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the first item in the list with parameter code `server.secret`, and copy its `Parameter Value`.
 
-`server.secret`需要说明一下，这个`参数值`很重要，作用是让我们的`Server`端连接`manager-api`。`server.secret`是每次从零部署manager模块时，会自动随机生成的密钥。
+Let me explain `server.secret`: this `Parameter Value` is very important as it allows our `Server` to connect to the `manager-api`. The `server.secret` is a randomly generated key each time the manager module is deployed from scratch.
 
-如果你的`xiaozhi-server`目录没有`data`，你需要创建`data`目录。
-如果你的`data`下面没有`.config.yaml`文件，你可以把`xiaozhi-server`目录下的`config_from_api.yaml`文件复制到`data`，并重命名为`.config.yaml`
+If your `xiaozhi-server` directory doesn't have a `data` directory, you need to create one.
+If you don't have a `.config.yaml` file under `data`, you can copy the `config_from_api.yaml` file from the `xiaozhi-server` directory to `data` and rename it to `.config.yaml`.
 
-复制`参数值`后，打开`xiaozhi-server`下的`data`目录的`.config.yaml`文件。此刻你的配置文件内容应该是这样的：
+After copying the `Parameter Value`, open the `.config.yaml` file in the `data` directory of your `xiaozhi-server`. At this point, your configuration file should look like this:
 
 ```
 manager-api:
   url: http://127.0.0.1:8002/xiaozhi
-  secret: 你的server.secret值
+  secret: your_server.secret_value
 ```
 
-把你刚才从`智控台`复制过来的`server.secret`的`参数值`复制到`.config.yaml`文件里的`secret`里。
+Paste the `server.secret` `Parameter Value` you just copied from the `Control Panel` into the `secret` field in the `.config.yaml` file.
 
-类似这样的效果
+The result should look something like this:
 ```
 manager-api:
   url: http://127.0.0.1:8002/xiaozhi
   secret: 12345678-xxxx-xxxx-xxxx-123456789000
 ```
 
-## 5.运行项目
+## 9. Run the Project
 
 ```
-# 确保在xiaozhi-server目录下执行
+# Make sure to execute in the xiaozhi-server directory
 conda activate xiaozhi-esp32-server
 python app.py
 ```
 
-如果你能看到，类似以下日志,则是本项目服务启动成功的标志。
+If you can see logs similar to the following, it indicates that the project service has started successfully:
 
 ```
 25-02-23 12:01:09[core.websocket_server] - INFO - Server is running at ws://xxx.xx.xx.xx:8000/xiaozhi/v1/
-25-02-23 12:01:09[core.websocket_server] - INFO - =======上面的地址是websocket协议地址，请勿用浏览器访问=======
-25-02-23 12:01:09[core.websocket_server] - INFO - 如想测试websocket请用谷歌浏览器打开test目录下的test_page.html
+25-02-23 12:01:09[core.websocket_server] - INFO - =======The above address is a websocket protocol address, please do not access it with a browser=======
+25-02-23 12:01:09[core.websocket_server] - INFO - If you want to test websocket, please use Google Chrome to open test_page.html in the test directory
 25-02-23 12:01:09[core.websocket_server] - INFO - =======================================================
 ```
 
-由于你是全模块部署，因此你有两个重要的接口。
+Since you're doing a full module deployment, you have two important interfaces:
 
-OTA接口：
+OTA interface:
 ```
-http://你电脑局域网的ip:8002/xiaozhi/ota/
-```
-
-Websocket接口：
-```
-ws://你电脑局域网的ip:8000/xiaozhi/v1/
+http://your_computer_local_network_ip:8002/xiaozhi/ota/
 ```
 
-请你务必把以上两个接口地址写入到智控台中：他们将会影响websocket地址发放和自动升级功能。
+Websocket interface:
+```
+ws://your_computer_local_network_ip:8000/xiaozhi/v1/
+```
 
-1、使用超级管理员账号，登录智控台，在顶部菜单找到`参数管理`，找到参数编码是`server.websocket`，输入你的`Websocket接口`。
+Please make sure to enter these two interface addresses into the Control Panel: they will affect websocket address distribution and automatic upgrade functionality.
 
-2、使用超级管理员账号，登录智控台，在顶部菜单找到`参数管理`，找到数编码是`server.ota`，输入你的`OTA接口`。
+1. Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the parameter code `server.websocket`, and enter your `Websocket interface`.
 
+2. Using the super administrator account, log in to the Control Panel, find `Parameter Management` in the top menu, locate the parameter code `server.ota`, and enter your `OTA interface`.
 
-接下来，你就可以开始操作你的esp32设备了，你可以`自行编译esp32固件`也可以配置使用`虾哥编译好的1.6.1以上版本的固件`。两个任选一个
+Now, you can start operating your ESP32 device. You can either `compile your own ESP32 firmware` or configure using `firmware version 1.6.1 or above compiled by Xia Ge`. Choose one of the two:
 
-1、 [编译自己的esp32固件](firmware-build.md)了。
+1. [Compile your own ESP32 firmware](firmware-build.md).
 
-2、 [基于虾哥编译好的固件配置自定义服务器](firmware-setting.md)了。
+2. [Configure a custom server based on firmware compiled by Xia Ge](firmware-setting.md).
 
-# 常见问题
+# Whisper ASR Setup
 
-以下是一些常见问题，供参考：
+This project now supports OpenAI's Whisper model for multilingual speech recognition. Whisper is an automatic speech recognition (ASR) system trained on 680,000 hours of multilingual and multitask supervised data collected from the web. It offers robust speech recognition across many languages and can translate those languages into English.
 
-[1、为什么我说的话，小智识别出来很多韩文、日文、英文](./FAQ.md)
+## Installation
 
-[2、为什么会出现“TTS 任务出错 文件不存在”？](./FAQ.md)
+To use Whisper ASR, you need to install additional dependencies:
 
-[3、TTS 经常失败，经常超时](./FAQ.md)
+```bash
+# For Docker deployment, these are already included in the container
+# For source code deployment, run:
+pip install -r requirements-whisper.txt
+```
 
-[4、使用Wifi能连接自建服务器，但是4G模式却接不上](./FAQ.md)
+You also need FFmpeg installed on your system:
 
-[5、如何提高小智对话响应速度？](./FAQ.md)
+```bash
+# For Ubuntu/Debian
+sudo apt-get update && sudo apt-get install -y ffmpeg
 
-[6、我说话很慢，停顿时小智老是抢话](./FAQ.md)
+# For macOS
+brew install ffmpeg
 
-[7、我想通过小智控制电灯、空调、远程开关机等操作](./FAQ.md)
+# For Windows
+# Download from https://ffmpeg.org/download.html
+```
+
+## Configuration
+
+The Whisper ASR provider can be configured in the Control Panel. Log in as an administrator, go to "Model Configuration" and select "Speech Recognition" in the left sidebar. Find the Whisper ASR provider and configure it with the following settings:
+
+- **Model Name**: Choose from tiny, base, small, medium, or large (default is base)
+- **Language**: Set to a specific language code or leave as null for auto-detection
+- **Output Directory**: Directory to store temporary files (default is tmp/)
+
+Alternatively, you can configure Whisper directly in the config.yaml file:
+
+```yaml
+ASR:
+  WhisperASR:
+    type: whisper
+    model_name: base
+    language: null
+    output_dir: tmp/
+```
+
+## Model Options
+
+Whisper offers several model sizes:
+
+| Model Size | Parameters | Required VRAM | Relative Speed |
+|------------|------------|---------------|---------------|
+| tiny       | 39 M       | ~1 GB         | ~32x          |
+| base       | 74 M       | ~1 GB         | ~16x          |
+| small      | 244 M      | ~2 GB         | ~6x           |
+| medium     | 769 M      | ~5 GB         | ~2x           |
+| large      | 1550 M     | ~10 GB        | 1x            |
+
+Choose the model size based on your hardware capabilities and accuracy requirements.
+
+## Language Support
+
+Whisper supports a wide range of languages. You can either:
+
+1. Set `language: null` for automatic language detection
+2. Specify a language code for better accuracy in that language
+
+Supported language codes include:
+- English: `en`
+- Spanish: `es`
+- French: `fr`
+- German: `de`
+- Japanese: `ja`
+- Chinese: `zh`
+- And many more
+
+## Usage
+
+Once configured, select Whisper as your ASR provider in the Control Panel:
+
+1. Log in as an administrator
+2. Go to "Parameter Management"
+3. Find the parameter "selected_module.ASR" 
+4. Set its value to "WhisperASR"
+
+## Troubleshooting
+
+If you encounter issues with Whisper:
+
+1. Check the logs for any error messages
+2. Ensure you have installed all dependencies correctly
+3. Verify that FFmpeg is installed and accessible
+4. Try a smaller model if you're experiencing memory issues
+
+## Performance Considerations
+
+- The first time you use Whisper, it will download the model, which may take some time depending on your internet connection
+- Larger models provide better accuracy but require more memory and processing power
+- For devices with limited resources, use the "tiny" or "base" models
+- Processing time depends on the length of the audio and the model size
+
+# Frequently Asked Questions
+
+Here are some common questions for reference:
+
+[1. Why does Xiaozhi recognize a lot of Korean, Japanese, and English when I speak?](./FAQ.md)
+
+[2. Why does "TTS task error: File does not exist" appear?](./FAQ.md)
+
+[3. TTS frequently fails and times out](./FAQ.md)
+
+[4. Can connect to self-built server using WiFi, but can't connect in 4G mode](./FAQ.md)
+
+[5. How to improve Xiaozhi's dialogue response speed?](./FAQ.md)
+
+[6. I speak slowly, but Xiaozhi keeps interrupting when I pause](./FAQ.md)
+
+[7. I want to control lights, air conditioners, remote power on/off, and other operations through Xiaozhi](./FAQ.md)

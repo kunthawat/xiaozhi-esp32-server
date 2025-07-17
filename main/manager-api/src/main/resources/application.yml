@@ -19,6 +19,9 @@ spring:
   messages:
     encoding: UTF-8
     basename: i18n/messages
+    # Set English as default language
+    fallback-to-system-locale: false
+    default-locale: en_US
   servlet:
     multipart:
       max-file-size: 100MB

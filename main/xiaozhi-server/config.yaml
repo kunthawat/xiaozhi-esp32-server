@@ -168,8 +168,8 @@ end_prompt:
 selected_module:
   # 语音活动检测模块，默认使用SileroVAD模型
   VAD: SileroVAD
-  # 语音识别模块，默认使用FunASR本地模型
-  ASR: FunASR
+  # 语音识别模块，使用Whisper模型支持多语言
+  ASR: WhisperASR
   # 将根据配置名称对应的type调用实际的LLM适配器
   LLM: ChatGLMLLM
   # 视觉语言大模型
@@ -241,6 +241,17 @@ Memory:
     llm: ChatGLMLLM
 
 ASR:
+  WhisperASR:
+    # OpenAI's Whisper model for multilingual speech recognition
+    type: whisper
+    # Model name can be one of: tiny, base, small, medium, large
+    # Smaller models are faster but less accurate
+    # Larger models are more accurate but require more resources
+    model_name: base
+    # Language can be set to a specific language code or null for auto-detection
+    # Examples: en, es, fr, de, ja, zh, etc.
+    language: null
+    output_dir: tmp/
   FunASR:
     type: fun_local
     model_dir: models/SenseVoiceSmall
