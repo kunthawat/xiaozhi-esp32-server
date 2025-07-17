@@ -32,7 +32,7 @@ services:
 
   # manager-api and manager-web module
   xiaozhi-esp32-server-web:
-    image: kunthawat/xiaozhi-esp32-server:web_latest
+    image: kunthawat/xiaozhi-esp32-server-web
     container_name: xiaozhi-esp32-server-web
     restart: always
     networks:
