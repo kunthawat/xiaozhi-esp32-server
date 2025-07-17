@@ -101,6 +101,8 @@ Execute the following command to start the new version containers:
 docker compose -f docker-compose_all.yml up -d
 ```
 
+This command will automatically build the Docker images locally before starting the containers. The first build may take some time as it needs to download and build all dependencies.
+
 After execution, run the following command to view the log information:
 
 ```

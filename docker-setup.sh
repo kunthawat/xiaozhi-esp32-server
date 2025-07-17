@@ -1,106 +1,93 @@
-#!/bin/sh
-# This file is used to automatically download the required files for this project and create directories
-# Requirements (otherwise it cannot be used):
-# 1. Please ensure your environment can access GitHub normally, otherwise you cannot download the script
-#
-# Detect operating system type
-case "$(uname -s)" in
-    Linux*)     OS=Linux;;
-    Darwin*)    OS=Mac;;
-    CYGWIN*)    OS=Windows;;
-    MINGW*)     OS=Windows;;
-    MSYS*)      OS=Windows;;
-    *)          OS=UNKNOWN;;
-esac
+#!/bin/bash
+# This script automates the setup process for the Xiaozhi ESP32 Server
+# It creates the necessary directory structure, downloads required files,
+# and prepares the environment for running with Docker Compose
 
-# Set colors (Windows CMD doesn't support, but it doesn't affect usage)
-if [ "$OS" = "Windows" ]; then
-    GREEN=""
-    RED=""
-    NC=""
-else
-    GREEN='\033[0;32m'
-    RED='\033[0;31m'
-    NC='\033[0m'
+# Set colors for better readability
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}=== Xiaozhi ESP32 Server Setup ===${NC}"
+echo -e "${GREEN}This script will set up the Xiaozhi ESP32 Server with Whisper ASR support${NC}"
+
+# Create base directory
+echo -e "\n${GREEN}Creating directory structure...${NC}"
+mkdir -p xiaozhi-server
+cd xiaozhi-server || { echo -e "${RED}Failed to enter xiaozhi-server directory${NC}"; exit 1; }
+
+# Create subdirectories
+mkdir -p data models/SenseVoiceSmall whisper_cache mysql/data uploadfile
+
+# Clone the repository
+echo -e "\n${GREEN}Cloning the repository...${NC}"
+if ! git clone https://github.com/kunthawat/xiaozhi-esp32-server.git repo; then
+    echo -e "${RED}Failed to clone repository. Please make sure git is installed and you have internet access.${NC}"
+    exit 1
 fi
 
-echo "${GREEN}Starting installation of Xiaozhi server...${NC}"
-
-# Create necessary directories
-echo "Creating directory structure..."
-mkdir -p xiaozhi-server/data xiaozhi-server/models/SenseVoiceSmall xiaozhi-server/whisper_cache
-cd xiaozhi-server || exit
-
-# Choose download command based on operating system
-if [ "$OS" = "Windows" ]; then
-    DOWNLOAD_CMD="curl -L -o"
-    if ! command -v curl >/dev/null 2>&1; then
-        DOWNLOAD_CMD="powershell -Command Invoke-WebRequest -Uri"
-        DOWNLOAD_CMD_SUFFIX="-OutFile"
-    fi
-else
-    if command -v curl >/dev/null 2>&1; then
-        DOWNLOAD_CMD="curl -L -o"
-    elif command -v wget >/dev/null 2>&1; then
-        DOWNLOAD_CMD="wget -O"
-    else
-        echo "${RED}Error: curl or wget needs to be installed${NC}"
-        exit 1
-    fi
-fi
+# Copy Docker files
+echo -e "\n${GREEN}Copying configuration files...${NC}"
+cp repo/main/xiaozhi-server/docker-compose_all.yml docker-compose.yml
+cp repo/main/xiaozhi-server/config.yaml data/.config.yaml
 
 # Download speech recognition model
-echo "Downloading speech recognition model..."
-if [ "$DOWNLOAD_CMD" = "powershell -Command Invoke-WebRequest -Uri" ]; then
-    $DOWNLOAD_CMD "https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt" $DOWNLOAD_CMD_SUFFIX "models/SenseVoiceSmall/model.pt"
+echo -e "\n${GREEN}Downloading speech recognition model...${NC}"
+echo -e "${BLUE}This may take some time depending on your internet connection...${NC}"
+
+if command -v curl &> /dev/null; then
+    if ! curl -L -o models/SenseVoiceSmall/model.pt "https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt"; then
+        echo -e "${RED}Model download failed.${NC}"
+        MODEL_FAILED=true
+    fi
+elif command -v wget &> /dev/null; then
+    if ! wget -O models/SenseVoiceSmall/model.pt "https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt"; then
+        echo -e "${RED}Model download failed.${NC}"
+        MODEL_FAILED=true
+    fi
 else
-    $DOWNLOAD_CMD "models/SenseVoiceSmall/model.pt" "https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt"
+    echo -e "${RED}Neither curl nor wget is installed. Please install one of them and try again.${NC}"
+    MODEL_FAILED=true
 fi
 
-if [ $? -ne 0 ]; then
-    echo "${RED}Model download failed. Please download manually from:${NC}"
-    echo "1. https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt"
-    echo "2. Baidu Netdisk: https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg (Extraction code: qvna)"
-    echo "After downloading, please place the file in models/SenseVoiceSmall/model.pt"
-fi
-
-# Download configuration files
-echo "Downloading configuration files..."
-if [ "$DOWNLOAD_CMD" = "powershell -Command Invoke-WebRequest -Uri" ]; then
-    $DOWNLOAD_CMD "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml" $DOWNLOAD_CMD_SUFFIX "docker-compose.yml"
-    $DOWNLOAD_CMD "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml" $DOWNLOAD_CMD_SUFFIX "data/.config.yaml"
-else
-    $DOWNLOAD_CMD "docker-compose.yml" "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml"
-    $DOWNLOAD_CMD "data/.config.yaml" "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml"
+if [ "$MODEL_FAILED" = true ]; then
+    echo -e "${RED}Please download the model manually from:${NC}"
+    echo -e "1. https://modelscope.cn/models/iic/SenseVoiceSmall/resolve/master/model.pt"
+    echo -e "2. Baidu Netdisk: https://pan.baidu.com/share/init?surl=QlgM58FHhYv1tFnUT_A8Sg (Extraction code: qvna)"
+    echo -e "After downloading, place the file in xiaozhi-server/models/SenseVoiceSmall/model.pt"
 fi
 
 # Check if files exist
-echo "Checking file integrity..."
-FILES_TO_CHECK="docker-compose.yml data/.config.yaml models/SenseVoiceSmall/model.pt"
+echo -e "\n${GREEN}Checking file integrity...${NC}"
+FILES_TO_CHECK="docker-compose.yml data/.config.yaml"
 ALL_FILES_EXIST=true
 
 for FILE in $FILES_TO_CHECK; do
     if [ ! -f "$FILE" ]; then
-        echo "${RED}Error: $FILE does not exist${NC}"
+        echo -e "${RED}Error: $FILE does not exist${NC}"
         ALL_FILES_EXIST=false
     fi
 done
 
 if [ "$ALL_FILES_EXIST" = false ]; then
-    echo "${RED}Some files failed to download, please check the error messages above and manually download the missing files.${NC}"
+    echo -e "${RED}Some files are missing. Setup cannot continue.${NC}"
     exit 1
 fi
 
-echo "${GREEN}File download complete!${NC}"
-echo "Please edit the data/.config.yaml file to configure your API keys."
-echo "After configuration is complete, run the following command to start the service:"
-echo "${GREEN}docker-compose up -d${NC}"
-echo "To view logs, run:"
-echo "${GREEN}docker logs -f xiaozhi-esp32-server${NC}"
+# Setup complete
+echo -e "\n${GREEN}Setup complete!${NC}"
+echo -e "\n${BLUE}Next steps:${NC}"
+echo -e "1. Edit the ${BLUE}data/.config.yaml${NC} file to configure your API keys"
+echo -e "2. Run ${BLUE}docker-compose up -d${NC} to start the services"
+echo -e "3. The Docker images will be built automatically during the first run"
+echo -e "4. To view logs, run ${BLUE}docker logs -f xiaozhi-esp32-server${NC}"
 
-# Prompt user to edit configuration file
-echo "\n${RED}Important notes:${NC}"
-echo "1. Please make sure to edit the data/.config.yaml file and configure the necessary API keys"
-echo "2. Especially the keys for ChatGLM and mem0ai must be configured"
-echo "3. Only start the docker service after configuration is complete"
-echo "4. Whisper ASR is now supported. To use it, configure the ASR provider in the Control Panel"
+echo -e "\n${RED}Important notes:${NC}"
+echo -e "1. Make sure to configure the necessary API keys in data/.config.yaml"
+echo -e "2. Especially the keys for ChatGLM and mem0ai must be configured"
+echo -e "3. Only start the docker service after configuration is complete"
+echo -e "4. Whisper ASR is now supported. To use it, configure the ASR provider in the Control Panel"
+echo -e "5. The first build may take some time as it needs to download and build all dependencies"
+
+echo -e "\n${GREEN}Thank you for using Xiaozhi ESP32 Server!${NC}"
