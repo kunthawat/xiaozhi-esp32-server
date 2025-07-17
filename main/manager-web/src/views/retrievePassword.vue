@@ -1,7 +1,7 @@
 <template>
   <div class="welcome" @keyup.enter="retrievePassword">
     <el-container style="height: 100%;">
-      <!-- 保持相同的头部 -->
+      <!-- Keep the saer -->
       <el-header>
         <div style="display: flex;align-items: center;margin-top: 15px;margin-left: 10px;gap: 10px;">
           <img loading="lazy" alt="" src="@/assets/xiaozhi-logo.png" style="width: 45px;height: 45px;" />
@@ -14,83 +14,83 @@
       <el-main style="position: relative;">
         <form @submit.prevent="retrievePassword">
           <div class="login-box">
-            <!-- 修改标题部分 -->
+            <!-- Modified tion -->
             <div style="display: flex;align-items: center;gap: 20px;margin-bottom: 39px;padding: 0 30px;">
               <img loading="lazy" alt="" src="@/assets/login/hi.png" style="width: 34px;height: 34px;" />
-              <div class="login-text">重置密码</div>
+              <div class="login-text">Reset Passv>
               <div class="login-welcome">
                 PASSWORD RETRIEVE
               </div>
             </div>
 
             <div style="padding: 0 30px;">
-              <!-- 手机号输入 -->
+              <!-- Mobile nunput -->
               <div class="input-box">
                 <div style="display: flex; align-items: center; width: 100%;">
                   <el-select v-model="form.areaCode" style="width: 220px; margin-right: 10px;">
                     <el-option v-for="item in mobileAreaList" :key="item.key" :label="`${item.name} (${item.key})`"
                       :value="item.key" />
                   </el-select>
-                  <el-input v-model="form.mobile" placeholder="请输入手机号码" />
+                  <el-input v-model="form.mobile" placeholder="Enter mobil" />
                 </div>
               </div>
 
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/shield.png" />
-                  <el-input v-model="form.captcha" placeholder="请输入验证码" style="flex: 1;" />
+                  <el-input v-model="form.captcha" placeholder="Enter captcha" style="flex:>
                 </div>
-                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="验证码"
+                <img loading="lazy" v-if="captchaUrl" :src="captchaUrl" alt="Captcha"
                   style="width: 150px; height: 40px; cursor: pointer;" @click="fetchCaptcha" />
               </div>
 
-              <!-- 手机验证码 -->
+              <!-- Mobile ve
               <div style="display: flex; align-items: center; margin-top: 20px; width: 100%; gap: 10px;">
                 <div class="input-box" style="width: calc(100% - 130px); margin-top: 0;">
                   <img loading="lazy" alt="" class="input-icon" src="@/assets/login/phone.png" />
-                  <el-input v-model="form.mobileCaptcha" placeholder="请输入手机验证码" style="flex: 1;" maxlength="6" />
+                  <el-input v-model="form.mobileCaptcha" placeholder="Enter SMS verification code" style="flex: 1/>
                 </div>
                 <el-button type="primary" class="send-captcha-btn" :disabled="!canSendMobileCaptcha"
                   @click="sendMobileCaptcha">
                   <span>
-                    {{ countdown > 0 ? `${countdown}秒后重试` : '发送验证码' }}
+                    {{ countdown > 0 ? `Retry in ${countdown}s` : 'Sene' }}
                   </span>
                 </el-button>
               </div>
 
-              <!-- 新密码 -->
+              <!-- New pasword -->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
-                <el-input v-model="form.newPassword" placeholder="请输入新密码" type="password" />
+                <el-input v-model="form.newPassword" placeholder="Enter new password" type="" />
               </div>
 
-              <!-- 确认新密码 -->
+              <!-- Confirm n-->
               <div class="input-box">
                 <img loading="lazy" alt="" class="input-icon" src="@/assets/login/password.png" />
-                <el-input v-model="form.confirmPassword" placeholder="请确认新密码" type="password" />
+                <el-input v-model="form.confirmPassword" placeholder="Confirm new password" typerd" />
               </div>
 
-              <!-- 修改底部链接 -->
+              <!-- Modified b
               <div style="font-weight: 400;font-size: 14px;text-align: left;color: #5778ff;margin-top: 20px;">
-                <div style="cursor: pointer;" @click="goToLogin">返回登录</div>
+                <div style="cursor: pointer;" @click="goToLogin">Return to 
               </div>
             </div>
 
-            <!-- 修改按钮文本 -->
-            <div class="login-btn" @click="retrievePassword">立即修改</div>
+            <!-- Modified b
+            <div class="login-btn" @click="retrievePassword">Reset Passv>
 
-            <!-- 保持相同的协议声明 -->
+            <!-- Keep the same-->
             <div style="font-size: 14px;color: #979db1;">
-              同意
-              <div style="display: inline-block;color: #5778FF;cursor: pointer;">《用户协议》</div>
-              和
-              <div style="display: inline-block;color: #5778FF;cursor: pointer;">《隐私政策》</div>
+              Bye
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">User Agreemediv>
+              ad
+              <div style="display: inline-block;color: #5778FF;cursor: pointer;">Privacy Poli
             </div>
           </div>
         </form>
       </el-main>
 
-      <!-- 保持相同的页脚 -->
+      <!-- Keep the sa-->
       <el-footer>
         <version-footer />
       </el-footer>
@@ -138,7 +138,7 @@ export default {
     this.fetchCaptcha();
   },
   methods: {
-    // 复用验证码获取方法
+    // Reuse cap
     fetchCaptcha() {
       this.form.captchaId = getUUID();
       Api.user.getCaptcha(this.form.captchaId, (res) => {
@@ -147,13 +147,13 @@ export default {
           this.captchaUrl = URL.createObjectURL(blob);
 
         } else {
-          console.error('验证码加载异常:', error);
-          showDanger('验证码加载失败，点击刷新');
+          console.error('Captcha loading er
+          showDanger('Failed to load );
         }
       });
     },
 
-    // 封装输入验证逻辑
+    // Input vaic
     validateInput(input, message) {
       if (!input.trim()) {
         showDanger(message);
@@ -162,26 +162,26 @@ export default {
       return true;
     },
 
-    // 发送手机验证码
+    // Send moe
     sendMobileCaptcha() {
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
-        showDanger('请输入正确的手机号码');
+        showDanger('Please enter ');
         return;
       }
 
-      // 验证图形验证码
-      if (!this.validateInput(this.form.captcha, '请输入图形验证码')) {
+      // Validatha
+      if (!this.validateInput(this.form.captcha, 'Please enter ) {
         this.fetchCaptcha();
         return;
       }
 
-      // 清除可能存在的旧定时器
+      // Clear any etimer
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
       }
 
-      // 开始倒计时
+      // Startntdown
       this.countdown = 60;
       this.timer = setInterval(() => {
         if (this.countdown > 0) {
@@ -192,37 +192,37 @@ export default {
         }
       }, 1000);
 
-      // 调用发送验证码接口
+      // Call sendI
       Api.user.sendSmsVerification({
         phone: this.form.areaCode + this.form.mobile,
         captcha: this.form.captcha,
         captchaId: this.form.captchaId
       }, (res) => {
-        showSuccess('验证码发送成功');
+        showSuccess('Verificati
       }, (err) => {
-        showDanger(err.data.msg || '验证码发送失败');
+        showDanger(err.data.msg || 'Failed to 
         this.countdown = 0;
         this.fetchCaptcha();
       });
     },
 
-    // 修改逻辑
+    // Reseword logic
     retrievePassword() {
-      // 验证逻辑
+      // Valic
       if (!validateMobile(this.form.mobile, this.form.areaCode)) {
-        showDanger('请输入正确的手机号码');
+        showDanger('Please enter er');
         return;
       }
       if (!this.form.captcha) {
-        showDanger('请输入图形验证码');
+        showDanger('Please ente');
         return;
       }
       if (!this.form.mobileCaptcha) {
-        showDanger('请输入短信验证码');
+        showDanger('Please ente;
         return;
       }
       if (this.form.newPassword !== this.form.confirmPassword) {
-        showDanger('两次输入的密码不一致');
+        showDanger('Passwords do 
         return;
       }
 
@@ -231,10 +231,10 @@ export default {
         password: this.form.newPassword,
         code: this.form.mobileCaptcha
       }, (res) => {
-        showSuccess('密码重置成功');
+        showSuccess('Password sful');
         goToPage('/login');
       }, (err) => {
-        showDanger(err.data.msg || '重置失败');
+        showDanger(err.data.msg || 'Reset f;
         if (err.data != null && err.data.msg != null && err.data.msg.indexOf('图形验证码') > -1) {
           this.fetchCaptcha()
         }
