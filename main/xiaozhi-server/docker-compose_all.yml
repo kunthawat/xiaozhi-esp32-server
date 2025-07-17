@@ -4,7 +4,7 @@ version: '3'
 services:
   # Server module
   xiaozhi-esp32-server:
-    image: kunthawat/xiaozhi-esp32-server:server_latest
+    image: kunthawat/xiaozhi-esp32-server
     container_name: xiaozhi-esp32-server
     depends_on:
       - xiaozhi-esp32-server-db
