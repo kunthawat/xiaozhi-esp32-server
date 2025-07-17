@@ -27,7 +27,7 @@ cd mcp-endpoint-server
 docker compose -f docker-compose.yml down
 docker stop mcp-endpoint-server
 docker rm mcp-endpoint-server
-docker rmi ghcr.nju.edu.cn/xinnan-tech/mcp-endpoint-server:latest
+docker rmi kunthawat/mcp-endpoint-server:latest
 
 # 启动docker容器
 docker compose -f docker-compose.yml up -d

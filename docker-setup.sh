@@ -67,11 +67,11 @@ fi
 # Download configuration files
 echo "Downloading configuration files..."
 if [ "$DOWNLOAD_CMD" = "powershell -Command Invoke-WebRequest -Uri" ]; then
-    $DOWNLOAD_CMD "https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml" $DOWNLOAD_CMD_SUFFIX "docker-compose.yml"
-    $DOWNLOAD_CMD "https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml" $DOWNLOAD_CMD_SUFFIX "data/.config.yaml"
+    $DOWNLOAD_CMD "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml" $DOWNLOAD_CMD_SUFFIX "docker-compose.yml"
+    $DOWNLOAD_CMD "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml" $DOWNLOAD_CMD_SUFFIX "data/.config.yaml"
 else
-    $DOWNLOAD_CMD "docker-compose.yml" "https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml"
-    $DOWNLOAD_CMD "data/.config.yaml" "https://raw.githubusercontent.com/xinnan-tech/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml"
+    $DOWNLOAD_CMD "docker-compose.yml" "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/docker-compose.yml"
+    $DOWNLOAD_CMD "data/.config.yaml" "https://raw.githubusercontent.com/kunthawat/xiaozhi-esp32-server/main/main/xiaozhi-server/config.yaml"
 fi
 
 # Check if files exist
