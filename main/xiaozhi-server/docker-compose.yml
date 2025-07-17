@@ -1,4 +1,4 @@
-# Docker安装Server
+# Docker Server installation
 
 version: '3'
 services:
@@ -10,20 +10,16 @@ services:
       - seccomp:unconfined
     environment:
       - TZ=Asia/Shanghai
+      - WHISPER_CACHE_DIR=/opt/xiaozhi-esp32-server/whisper_cache
     ports:
-      # ws服务端
+      # WebSocket server
       - "8000:8000"
-      # http服务的端口，用于简单OTA接口(单服务部署)，以及视觉分析接口
+      # HTTP service port for simple OTA interface (single service deployment) and vision analysis interface
       - "8003:8003"
     volumes:
-      # 配置文件目录
+      # Configuration directory
       - ./data:/opt/xiaozhi-esp32-server/data
-      # 模型文件挂接，很重要
+      # Model file mount, very important
       - ./models/SenseVoiceSmall/model.pt:/opt/xiaozhi-esp32-server/models/SenseVoiceSmall/model.pt
-      # Whisper cache directory for models
-      - ./whisper_cache:/root/.cache/whisper
-    # Install Whisper dependencies on container start
-    command: >
-      bash -c "pip install -r requirements-whisper.txt &&
-              apt-get update && apt-get install -y ffmpeg &&
-              python app.py"
+      # Whisper cache directory for storing downloaded models
+      - ./whisper_cache:/opt/xiaozhi-esp32-server/whisper_cache
