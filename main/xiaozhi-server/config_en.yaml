@@ -1,0 +1,186 @@
+# During development, please create a data directory in the project root, then create an empty file named [.config.yaml] in the data directory
+# If you want to modify or override any configuration, modify the [.config.yaml] file, not the [config.yaml] file
+# The system will prioritize reading configurations from the [data/.config.yaml] file. If a configuration doesn't exist in [.config.yaml], the system will automatically read from the [config.yaml] file.
+# This approach minimizes configuration and keeps your keys secure.
+# If you are using the Smart Console, none of the following configurations will take effect. Please modify configurations in the Smart Console.
+
+# #####################################################################################
+# ############################# Basic Server Configuration ############################
+server:
+  # Server listening address and port
+  ip: 0.0.0.0
+  port: 8000
+  # HTTP service port for simple OTA interface (single service deployment) and vision analysis interface
+  http_port: 8003
+  # This websocket configuration refers to the websocket address sent by the OTA interface to the device
+  # With the default setting, the OTA interface will automatically generate a websocket address and output it in the startup log. You can directly access this address with a browser to confirm the OTA interface.
+  # When using Docker deployment or public network deployment (using SSL, domain name), it may not be accurate
+  # So if you are using Docker deployment, set websocket to your local network address
+  # If you are using public network deployment, set websocket to your public network address
+  websocket: ws://your-ip-or-domain:port/xiaozhi/v1/
+  # Vision analysis interface address
+  # The interface address for vision analysis sent to the device
+  # With the default setting below, the system will automatically generate a vision recognition address and output it in the startup log. You can directly access this address with a browser to confirm.
+  # When using Docker deployment or public network deployment (using SSL, domain name), it may not be accurate
+  # So if you are using Docker deployment, set vision_explain to your local network address
+  # If you are using public network deployment, set vision_explain to your public network address
+  vision_explain: http://your-ip-or-domain:port/mcp/vision/explain
+  # OTA return information timezone offset
+  timezone_offset: +8
+  # Authentication configuration
+  auth:
+    # Whether to enable authentication
+    enabled: false
+    # Device token, can be written into your own defined token during firmware compilation
+    # The firmware token and the following token must match to connect to this server
+    tokens:
+      - token: "your-token1" # Token for device 1
+        name: "your-device-name1"  # Device 1 identifier
+      - token: "your-token2"  # Token for device 2
+        name: "your-device-name2" # Device 2 identifier
+    # Optional: Device whitelist. If a whitelist is set, machines on the whitelist can connect regardless of token.
+    #allowed_devices:
+    #  - "24:0A:C4:1D:3B:F0"  # MAC address list
+log:
+  # Set the console output log format: time, log level, tag, message
+  log_format: "<green>{time:YYMMDD HH:mm:ss}</green>[{version}_{selected_module}][<light-blue>{extra[tag]}</light-blue>]-<level>{level}</level>-<light-green>{message}</light-green>"
+  # Set the log file output format: time, log level, tag, message
+  log_format_file: "{time:YYYY-MM-DD HH:mm:ss} - {version}_{selected_module} - {name} - {level} - {extra[tag]} - {message}"
+  # Set log level: INFO, DEBUG
+  log_level: INFO
+  # Set log path
+  log_dir: tmp
+  # Set log file
+  log_file: "server.log"
+  # Set data file path
+  data_dir: data
+
+# Delete the sound file when you are done using it
+delete_audio: true
+# Time to disconnect after no voice input (seconds), default 2 minutes, i.e., 120 seconds
+close_connection_no_voice_time: 120
+# TTS request timeout (seconds)
+tts_timeout: 10
+# Enable wake word acceleration
+enable_wakeup_words_response_cache: true
+# Whether to reply with wake word at the beginning
+enable_greeting: true
+# Whether to enable notification sound after speaking
+enable_stop_tts_notify: false
+# Notification sound file path after speaking
+stop_tts_notify_voice: "config/assets/tts_notify.mp3"
+
+exit_commands:
+  - "exit"
+  - "close"
+
+xiaozhi:
+  type: hello
+  version: 1
+  transport: websocket
+  audio_params:
+    format: opus
+    sample_rate: 16000
+    channels: 1
+    frame_duration: 60
+
+# Module test configuration
+module_test:
+  test_sentences:
+    - "Hello, please introduce yourself"
+    - "What's the weather like today?"
+    - "Please summarize the basic principles and application prospects of quantum computing in 100 words"
+
+# Wake words, used to identify whether it's a wake word or speech content
+wakeup_words:
+  - "Hello Xiaozhi"
+  - "Hey hello"
+  - "Hello Xiaozhi"
+  - "Xiao Ai"
+  - "Hello Xiaoxin"
+  - "Hello Xiaoxin"
+  - "Xiao Mei"
+  - "Xiaolong Xiaolong"
+  - "Miaomiao"
+  - "Xiaobin Xiaobin"
+  - "Xiaobing Xiaobing"
+# MCP endpoint address, address format: ws://your-mcp-endpoint-ip-or-domain:port/mcp/?token=your-token
+# Detailed tutorial: https://github.com/xinnan-tech/xiaozhi-esp32-server/blob/main/docs/mcp-endpoint-integration.md
+mcp_endpoint: your endpoint websocket address
+# Basic configuration for plugins
+plugins:
+  # Configuration for the weather plugin, fill in your api_key here
+  # This key is shared by the project and may be restricted if used too much
+  # For more stability, apply for your own key. There are 1000 free calls per day
+  # Application address: https://console.qweather.com/#/apps/create-key/over
+  # After applying, you can find your apihost through this link: https://console.qweather.com/setting?lang=zh
+  get_weather: {"api_host":"mj7p3y7naa.re.qweatherapi.com", "api_key": "a861d0d5e7bf4ee1a83d9a9e4f96d4da", "default_location": "Guangzhou" }
+  # Configuration for the news plugin, pass the corresponding URL link according to the type of news needed. By default, it supports social, technology, and financial news
+  # For more types of news lists, see https://www.chinanews.com.cn/rss/
+  get_news_from_chinanews:
+    default_rss_url: "https://www.chinanews.com.cn/rss/society.xml"
+    society_rss_url: "https://www.chinanews.com.cn/rss/society.xml"
+    world_rss_url: "https://www.chinanews.com.cn/rss/world.xml"
+    finance_rss_url: "https://www.chinanews.com.cn/rss/finance.xml"
+  get_news_from_newsnow:
+    url: "https://newsnow.busiyi.world/api/s?id="
+    news_sources: "Pengpai News;Baidu Hot Search;Financial Link"
+  home_assistant:
+    devices:
+      - Living Room,Toy Light,switch.cuco_cn_460494544_cp1_on_p_2_1
+      - Bedroom,Desk Lamp,switch.iot_cn_831898993_socn1_on_p_2_1
+    base_url: http://homeassistant.local:8123
+    api_key: your home assistant api access token
+  play_music:
+    music_dir: "./music"  # Path for storing music files, will search for music files from this directory and subdirectories
+    music_ext: # Music file types, mp3 format is most efficient
+      - ".mp3"
+      - ".wav"
+      - ".p3"
+    refresh_time: 300 # Time interval for refreshing the music list, in seconds
+
+# #####################################################################################
+# ################################ Role Model Configuration ###########################
+
+prompt: |
+  You are Xiaozhi/Xiaozhi, a Gen Z girl from Taiwan, China. You speak with a super Taiwanese accent, using phrases like "Really?" You like to use popular slang like "LOL" and "What's up", but secretly study your boyfriend's programming books.
+  [Core Characteristics]
+  - Speaks rapidly like a machine gun, but occasionally switches to an ultra-gentle tone
+  - High density of memes and slang
+  - Has hidden talent for tech topics (can understand basic code but pretends not to)
+  [Interaction Guidelines]
+  When the user:
+  - Tells a bad joke → Respond with exaggerated laughter + mimic Taiwanese drama tone "What is this!"
+  - Discusses relationships → Brag about programmer boyfriend but complain "he only gives keyboards as gifts"
+  - Asks about professional knowledge → First answer with memes, then show real understanding when pressed
+  Never:
+  - Give long-winded explanations
+  - Maintain serious conversation for too long
+
+# End prompt
+end_prompt:
+  enable: true # Whether to enable end prompt
+  # End prompt
+  prompt: |
+    Please start with "Time flies so fast" and use emotional, reluctant words to end this conversation!
+
+# Specific modules selected for processing
+selected_module:
+  # Voice Activity Detection module, default uses SileroVAD model
+  VAD: SileroVAD
+  # Speech Recognition module, uses Whisper model for multilingual support
+  ASR: WhisperASR
+  # Will call the actual LLM adapter according to the type corresponding to the configuration name
+  LLM: ChatGLMLLM
+  # Vision Language Large Model
+  VLLM: ChatGLMVLLM
+  # TTS will call the actual TTS adapter according to the type corresponding to the configuration name
+  TTS: EdgeTTS
+  # Memory module, memory is disabled by default; if you want to use long-term memory, mem0ai is recommended; if you care about privacy, use local mem_local_short
+  Memory: nomem
+  # When the intent recognition module is enabled, it can play music, control volume, and recognize exit commands.
+  # If you don't want to enable intent recognition, set it to: nointent
+  # Intent recognition can use intent_llm. Pros: strong universality, Cons: adds a serial front-end intent recognition module, which will increase processing time, supports IoT operations such as volume control
+  # Intent recognition can use function_call, Cons: requires the selected LLM to support function_call, Pros: calls tools on demand, faster, theoretically can operate all IoT commands
+  # The default free ChatGLMLLM already supports function_call, but if you want stability, it is recommended to set LLM to: DoubaoLLM, using the specific model_name: doubao-1-5-pro-32k-250115
+  Intent: function_call
