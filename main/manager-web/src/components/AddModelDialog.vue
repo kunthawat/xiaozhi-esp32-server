@@ -3,23 +3,23 @@
     custom-class="custom-dialog" :show-close="false" class="center-dialog">
     <div style="margin: 0 18px; text-align: left; padding: 10px; border-radius: 10px;">
       <div style="font-size: 30px; color: #3d4566; margin-top: -10px; margin-bottom: 10px; text-align: center;">
-        添加模型
+        Add Model
       </div>
 
       <button class="custom-close-btn" @click="handleClose">
         ×
       </button>
 
-      <!-- 模型信息部分 -->
+      <!-- Model Information Section -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <div style="font-size: 20px; font-weight: bold; color: #3d4566;">模型信息</div>
+        <div style="font-size: 20px; font-weight: bold; color: #3d4566;">Model Information</div>
         <div style="display: flex; align-items: center; gap: 20px;">
           <div style="display: flex; align-items: center;">
-            <span style="margin-right: 8px;">是否启用</span>
+            <span style="margin-right: 8px;">Enabled</span>
             <el-switch v-model="formData.isEnabled" class="custom-switch"></el-switch>
           </div>
           <div style="display: none; align-items: center;">
-            <span style="margin-right: 8px;">设为默认</span>
+            <span style="margin-right: 8px;">Set as Default</span>
             <el-switch v-model="formData.isDefault" class="custom-switch"></el-switch>
           </div>
         </div>
@@ -28,38 +28,38 @@
       <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
       <el-form :model="formData" label-width="100px" label-position="left" class="custom-form">
         <div style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item label="模型名称" prop="modelName" style="flex: 1;">
-            <el-input v-model="formData.modelName" placeholder="请输入模型名称" class="custom-input-bg"></el-input>
+          <el-form-item label="Model Name" prop="modelName" style="flex: 1;">
+            <el-input v-model="formData.modelName" placeholder="Enter model name" class="custom-input-bg"></el-input>
           </el-form-item>
-          <el-form-item label="模型编码" prop="modelCode" style="flex: 1;">
-            <el-input v-model="formData.modelCode" placeholder="请输入模型编码" class="custom-input-bg"></el-input>
+          <el-form-item label="Model Code" prop="modelCode" style="flex: 1;">
+            <el-input v-model="formData.modelCode" placeholder="Enter model code" class="custom-input-bg"></el-input>
           </el-form-item>
         </div>
 
         <div style="display: flex; gap: 20px; margin-bottom: 0;">
-          <el-form-item label="供应器" prop="supplier" style="flex: 1;">
-            <el-select v-model="formData.supplier" placeholder="请选择" class="custom-select custom-input-bg"
+          <el-form-item label="Provider" prop="supplier" style="flex: 1;">
+            <el-select v-model="formData.supplier" placeholder="Please select" class="custom-select custom-input-bg"
               style="width: 100%;" @focus="loadProviders" filterable>
               <el-option v-for="item in providers" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
-          <el-form-item label="排序号" prop="sortOrder" style="flex: 1;">
-            <el-input v-model="formData.sort" type="number" placeholder="请输入排序号" class="custom-input-bg"></el-input>
+          <el-form-item label="Sort Order" prop="sortOrder" style="flex: 1;">
+            <el-input v-model="formData.sort" type="number" placeholder="Enter sort order" class="custom-input-bg"></el-input>
           </el-form-item>
         </div>
 
 
-        <el-form-item label="文档地址" prop="docLink" style="margin-bottom: 27px;">
-          <el-input v-model="formData.docLink" placeholder="请输入文档地址" class="custom-input-bg"></el-input>
+        <el-form-item label="Documentation" prop="docLink" style="margin-bottom: 27px;">
+          <el-input v-model="formData.docLink" placeholder="Enter documentation URL" class="custom-input-bg"></el-input>
         </el-form-item>
 
-        <el-form-item label="备注" prop="remark" class="prop-remark">
-          <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入模型备注" :autosize="{ minRows: 3, maxRows: 5 }"
+        <el-form-item label="Remarks" prop="remark" class="prop-remark">
+          <el-input v-model="formData.remark" type="textarea" :rows="3" placeholder="Enter model remarks" :autosize="{ minRows: 3, maxRows: 5 }"
             class="custom-input-bg"></el-input>
         </el-form-item>
       </el-form>
 
-      <div style="font-size: 20px; font-weight: bold; color: #3d4566; margin-bottom: 15px;">调用信息</div>
+      <div style="font-size: 20px; font-weight: bold; color: #3d4566; margin-bottom: 15px;">API Information</div>
       <div style="height: 2px; background: #e9e9e9; margin-bottom: 22px;"></div>
 
       <el-form :model="formData.configJson" label-width="auto" label-position="left" class="custom-form">
@@ -67,7 +67,37 @@
           <div :key="rowIndex" style="display: flex; gap: 20px; margin-bottom: 0;">
             <el-form-item v-for="field in row" :key="field.prop" :label="field.label" :prop="field.prop"
               style="flex: 1;">
-              <el-input v-model="formData.configJson[field.prop]" :placeholder="field.placeholder"
+              <template v-if="field.type === 'select' && field.prop === 'model_name' && formData.supplier === 'whisper'">
+                <el-select v-model="formData.configJson[field.prop]" placeholder="Select model size" class="custom-input-bg">
+                  <el-option label="Tiny (39M)" value="tiny" />
+                  <el-option label="Base (74M)" value="base" />
+                  <el-option label="Small (244M)" value="small" />
+                  <el-option label="Medium (769M)" value="medium" />
+                  <el-option label="Large (1550M)" value="large" />
+                </el-select>
+              </template>
+              <template v-else-if="field.type === 'select' && field.prop === 'language' && formData.supplier === 'whisper'">
+                <el-select v-model="formData.configJson[field.prop]" placeholder="Select language or auto-detect" class="custom-input-bg" 
+                  allow-create filterable default-first-option>
+                  <el-option label="Auto-detect" value="null" />
+                  <el-option label="English (en)" value="en" />
+                  <el-option label="Spanish (es)" value="es" />
+                  <el-option label="French (fr)" value="fr" />
+                  <el-option label="German (de)" value="de" />
+                  <el-option label="Japanese (ja)" value="ja" />
+                  <el-option label="Chinese (zh)" value="zh" />
+                  <el-option label="Korean (ko)" value="ko" />
+                  <el-option label="Russian (ru)" value="ru" />
+                  <el-option label="Italian (it)" value="it" />
+                  <el-option label="Portuguese (pt)" value="pt" />
+                  <el-option label="Arabic (ar)" value="ar" />
+                  <el-option label="Hindi (hi)" value="hi" />
+                  <el-option label="Turkish (tr)" value="tr" />
+                  <el-option label="Dutch (nl)" value="nl" />
+                  <el-option label="Polish (pl)" value="pl" />
+                </el-select>
+              </template>
+              <el-input v-else v-model="formData.configJson[field.prop]" :placeholder="field.placeholder"
                 :type="field.type || 'text'" class="custom-input-bg" :show-password="field.type === 'password'">
               </el-input>
             </el-form-item>
@@ -83,7 +113,7 @@
         class="save-btn"
         :loading="saving"
         :disabled="saving">
-        保存
+        Save
       </el-button>
     </div>
   </el-dialog>
@@ -129,8 +159,27 @@ export default {
     },
     'formData.supplier'(newVal) {
       this.currentProvider = this.providers.find(p => p.value === newVal);
-      this.providerFields = this.currentProvider?.fields || [];
-      this.initDynamicConfig();
+      
+      // Special handling for Whisper ASR
+      if (newVal === 'whisper' && this.modelType === 'asr') {
+        // Add Whisper-specific fields
+        const whisperFields = [
+          { label: 'Model Size', prop: 'model_name', type: 'select', placeholder: 'Select model size' },
+          { label: 'Language', prop: 'language', type: 'select', placeholder: 'Select language or auto-detect' },
+          { label: 'Output Directory', prop: 'output_dir', type: 'text', placeholder: 'Enter output directory' }
+        ];
+        
+        // Set default values for Whisper
+        this.formData.configJson.model_name = 'base';
+        this.formData.configJson.language = 'null';
+        this.formData.configJson.output_dir = 'tmp/';
+        
+        // Add Whisper fields to provider fields
+        this.providerFields = whisperFields;
+      } else {
+        this.providerFields = this.currentProvider?.fields || [];
+        this.initDynamicConfig();
+      }
     }
   },
   computed: {
@@ -152,18 +201,32 @@ export default {
         return
 
       Api.model.getModelProviders(this.modelType, (data) => {
-        this.providers = data.map(item => ({
-          label: item.name,
-          value: item.providerCode,
-          fields: JSON.parse(item.fields || '[]').map(f => ({
-            label: f.label,
-            prop: f.key,
-            type: f.type === 'password' ? 'password' : 'text',
-            placeholder: `请输入${f.label}`
-          }))
-        }))
-        this.providersLoaded = true
-      })
+        this.providers = data.map(item => {
+          let fields = JSON.parse(item.fields || '[]');
+          
+          // Special handling for Whisper ASR
+          if (item.providerCode === 'whisper' && this.modelType === 'asr') {
+            fields = [
+              { key: 'model_name', label: 'Model Size', type: 'select' },
+              { key: 'language', label: 'Language', type: 'select' },
+              { key: 'output_dir', label: 'Output Directory', type: 'text' }
+            ];
+          }
+          
+          return {
+            label: item.name,
+            value: item.providerCode,
+            fields: fields.map(f => ({
+              label: f.label,
+              prop: f.key,
+              type: f.type === 'password' ? 'password' : 
+                    f.type === 'select' ? 'select' : 'text',
+              placeholder: `Enter ${f.label}`
+            }))
+          };
+        });
+        this.providersLoaded = true;
+      });
     },
     initConfigJson() {
       const defaultConfig = {};
@@ -195,9 +258,14 @@ export default {
       this.saving = true;
 
       if (!this.formData.supplier) {
-        this.$message.error('请选择供应器');
+        this.$message.error('Please select a provider');
         this.saving = false;
         return;
+      }
+
+      // Special handling for Whisper language field
+      if (this.formData.supplier === 'whisper' && this.formData.configJson.language === 'null') {
+        this.formData.configJson.language = null;
       }
 
       const submitData = {
@@ -239,10 +307,10 @@ export default {
         isDefault: true,
         configJson: {}
       };
-      // 重置加载状态
+      // Reset loading state
       this.providers = [];
       this.providersLoaded = false;
-      // 重置字段配置
+      // Reset field configuration
       this.providerFields = [];
       this.currentProvider = null;
     },
