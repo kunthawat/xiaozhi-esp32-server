@@ -808,7 +808,7 @@ export default {
 
 .voice-management-btn:hover {
   background: #8aa2e0;
-  /* Darker col
+  /* Darker col */
   transform: scale(1.05);
 }
 
