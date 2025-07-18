@@ -1,78 +1,78 @@
-# During development, please create a data directory intory
-# If you want to modify or override any configuration, mo] file
-# The system will prioritize reading configurations from the [data/.config.yaml] file. le.
-# This approach minimiz
-# If you are using the Smart Console,le.
+# During development, please create a data directory in the project root, then create an empty file named [.config.yaml] in the data directory
+# If you want to modify or override any configuration, modify the [.config.yaml] file, not the [config.yaml] file
+# The system will prioritize reading configurations from the [data/.config.yaml] file. If a configuration doesn't exist in [.config.yaml], the system will automatically read from the [config.yaml] file.
+# This approach minimizes configuration and keeps your keys secure.
+# If you are using the Smart Console, none of the following configurations will take effect. Please modify configurations in the Smart Console.
 
 # #####################################################################################
-# ############################# Basic Server Configuration #####################
+# ############################# Basic Server Configuration ############################
 server:
   # Server listening address and port
   ip: 0.0.0.0
   port: 8000
-  # HTTP service port for simple OTA innterface
+  # HTTP service port for simple OTA interface (single service deployment) and vision analysis interface
   http_port: 8003
-  # This websocket configuration refers t device
-  # With the default setting, the OTA interface will automatically geterface.
-  # When using Docker deployment or puble
-  # So if you are using Docker deploymes
-  # If you are using public netwos
-  websocket: ws://your-ip-or-domain:port/xv1/
-  # Vision a
-  # The interface a
-  # With the default setting below, the system will automarm.
-  # When using Docker deployment or puble
-  # So if you are using Docker deployment, s address
-  # If you are using public network dss
-  vision_explain: http://your-ip-or-domain:port/mcp/visiain
-  # OTA return i
+  # This websocket configuration refers to the websocket address sent by the OTA interface to the device
+  # With the default setting, the OTA interface will automatically generate a websocket address and output it in the startup log. You can directly access this address with a browser to confirm the OTA interface.
+  # When using Docker deployment or public network deployment (using SSL, domain name), it may not be accurate
+  # So if you are using Docker deployment, set websocket to your local network address
+  # If you are using public network deployment, set websocket to your public network address
+  websocket: ws://your-ip-or-domain:port/xiaozhi/v1/
+  # Vision analysis interface address
+  # The interface address for vision analysis sent to the device
+  # With the default setting below, the system will automatically generate a vision recognition address and output it in the startup log. You can directly access this address with a browser to confirm.
+  # When using Docker deployment or public network deployment (using SSL, domain name), it may not be accurate
+  # So if you are using Docker deployment, set vision_explain to your local network address
+  # If you are using public network deployment, set vision_explain to your public network address
+  vision_explain: http://your-ip-or-domain:port/mcp/vision/explain
+  # OTA return information timezone offset
   timezone_offset: +8
-  # Authn
+  # Authentication configuration
   auth:
-    # Whetheon
+    # Whether to enable authentication
     enabled: false
-    # Device token, can be written into
-    # The firmware token and the follo
+    # Device token, can be written into your own defined token during firmware compilation
+    # The firmware token and the following token must match to connect to this server
     tokens:
-      - token: "your-token1" # Token for1
-        name: "your-device-name1"  # Devicentifier
-      - token: "your-token2"  # Token for2
-        name: "your-device-name2" # Devicifier
-    # Optional: Device whitelist. If a whitelistken.
+      - token: "your-token1" # Token for device 1
+        name: "your-device-name1"  # Device 1 identifier
+      - token: "your-token2"  # Token for device 2
+        name: "your-device-name2" # Device 2 identifier
+    # Optional: Device whitelist. If a whitelist is set, machines on the whitelist can connect regardless of token.
     #allowed_devices:
-    #  - "24:0A:C4:1D:3B:F0"  # MAC add
+    #  - "24:0A:C4:1D:3B:F0"  # MAC address list
 log:
-  # Set the console output logage
+  # Set the console output log format: time, log level, tag, message
   log_format: "<green>{time:YYMMDD HH:mm:ss}</green>[{version}_{selected_module}][<light-blue>{extra[tag]}</light-blue>]-<level>{level}</level>-<light-green>{message}</light-green>"
-  # Set the log file output fsage
+  # Set the log file output format: time, log level, tag, message
   log_format_file: "{time:YYYY-MM-DD HH:mm:ss} - {version}_{selected_module} - {name} - {level} - {extra[tag]} - {message}"
-  # Set log level: INUG
+  # Set log level: INFO, DEBUG
   log_level: INFO
-  # Set loath
+  # Set log path
   log_dir: tmp
-  # Set lofile
+  # Set log file
   log_file: "server.log"
-  # Set dataath
+  # Set data file path
   data_dir: data
 
 # Delete the sound file when you are done using it
 delete_audio: true
-# Time to disconnect after no 
+# Time to disconnect after no voice input (seconds), default 2 minutes, i.e., 120 seconds
 close_connection_no_voice_time: 120
-# TTS request 
+# TTS request timeout (seconds)
 tts_timeout: 10
-# Enable ration
+# Enable wake word acceleration
 enable_wakeup_words_response_cache: true
-# Whether t
+# Whether to reply with wake word at the beginning
 enable_greeting: true
-# Whether to
+# Whether to enable notification sound after speaking
 enable_stop_tts_notify: false
-# Notification sog
+# Notification sound file path after speaking
 stop_tts_notify_voice: "config/assets/tts_notify.mp3"
 
 exit_commands:
   - "exit"
-  - "clo"
+  - "close"
 
 xiaozhi:
   type: hello
@@ -84,39 +84,39 @@ xiaozhi:
     channels: 1
     frame_duration: 60
 
-# Moduleion
+# Module test configuration
 module_test:
   test_sentences:
     - "Hello, please introduce yourself"
     - "What's the weather like today?"
     - "Please summarize the basic principles and application prospects of quantum computing in 100 words"
 
-# Wake words, used 
+# Wake words, used to identify whether it's a wake word or speech content
 wakeup_words:
-  - "Helloozhi"
-  - "Hey h
-  - "Helloozhi"
+  - "Hello Xiaozhi"
+  - "Hey hello"
+  - "Hello Xiaozhi"
   - "Xiao Ai"
-  - "Hello
-  - "Hellon"
-  - "Xiao 
-  - "Xiaol"
-  - "Miaom"
-  - "Xiaobin"
-  - "Xiaobng"
-# MCP endpoint address, address format: ws://your-mcp-endpoen
-# Detailed tutorial: https://github.com/xinnan-tech/xiaozhi-esp32-server/blob/main/docs/mcp-endpoint-
-mcp_endpoint: your endpoint webdress
-# Basic cgins
+  - "Hello Xiaoxin"
+  - "Hello Xiaoxin"
+  - "Xiao Mei"
+  - "Xiaolong Xiaolong"
+  - "Miaomiao"
+  - "Xiaobin Xiaobin"
+  - "Xiaobing Xiaobing"
+# MCP endpoint address, address format: ws://your-mcp-endpoint-ip-or-domain:port/mcp/?token=your-token
+# Detailed tutorial: https://github.com/xinnan-tech/xiaozhi-esp32-server/blob/main/docs/mcp-endpoint-integration.md
+mcp_endpoint: your endpoint websocket address
+# Basic configuration for plugins
 plugins:
-  # Configuration for the w
-  # This key is shared by too much
-  # For more stability, apply
-  # Application address: https://console.qweather.com/#/appsover
-  # After applying, you can find your apihost through this link: https:/zh
-  get_weather: {"api_host":"mj7p3y7naa.re.qweatherapi.com", "api_key": "a861d0d5e7bf4ee1a83d9a9e4f96d4da", "default_location": "Guang
-  # Configuration for the news plugin, pass the cos
-  # For more types of news lists, see https://www
+  # Configuration for the weather plugin, fill in your api_key here
+  # This key is shared by the project and may be restricted if used too much
+  # For more stability, apply for your own key. There are 1000 free calls per day
+  # Application address: https://console.qweather.com/#/apps/create-key/over
+  # After applying, you can find your apihost through this link: https://console.qweather.com/setting?lang=zh
+  get_weather: {"api_host":"mj7p3y7naa.re.qweatherapi.com", "api_key": "a861d0d5e7bf4ee1a83d9a9e4f96d4da", "default_location": "Guangzhou" }
+  # Configuration for the news plugin, pass the corresponding URL link according to the type of news needed. By default, it supports social, technology, and financial news
+  # For more types of news lists, see https://www.chinanews.com.cn/rss/
   get_news_from_chinanews:
     default_rss_url: "https://www.chinanews.com.cn/rss/society.xml"
     society_rss_url: "https://www.chinanews.com.cn/rss/society.xml"
@@ -124,660 +124,63 @@ plugins:
     finance_rss_url: "https://www.chinanews.com.cn/rss/finance.xml"
   get_news_from_newsnow:
     url: "https://newsnow.busiyi.world/api/s?id="
-    news_sources: "Pengpai News;BLink"
+    news_sources: "Pengpai News;Baidu Hot Search;Financial Link"
   home_assistant:
     devices:
-      - Living Room,Toy Light,switch.cuco_cn_4604945_2_1
-      - Bedroom,Desk Lamp,switch.iot_cn_831898993_so
+      - Living Room,Toy Light,switch.cuco_cn_460494544_cp1_on_p_2_1
+      - Bedroom,Desk Lamp,switch.iot_cn_831898993_socn1_on_p_2_1
     base_url: http://homeassistant.local:8123
-    api_key: your home assistant api en
+    api_key: your home assistant api access token
   play_music:
-    music_dir: "./music"  # Path for storing music firectories
-    music_ext: # Music file typeent
+    music_dir: "./music"  # Path for storing music files, will search for music files from this directory and subdirectories
+    music_ext: # Music file types, mp3 format is most efficient
       - ".mp3"
       - ".wav"
       - ".p3"
-    refresh_time: 300 # Time interval fo
+    refresh_time: 300 # Time interval for refreshing the music list, in seconds
 
 # #####################################################################################
 # ################################ Role Model Configuration ###########################
 
 prompt: |
-  You are Xiaozhi/Xiaozhi, a Gen Z girl from Taiwan, China. You speak with a ooks.
-  [Core ics]
-  - Speaks rapidly lik
-  - High 
-  - Has hidden talent for teto)
-  [Inter
-  When
-  - Tells a bad joke → Respond w!"
-  - Discusses relationships → Brts"
-  - Asks about professional ssed
+  You are Xiaozhi/Xiaozhi, a Gen Z girl from Taiwan, China. You speak with a super Taiwanese accent, using phrases like "Really?" You like to use popular slang like "LOL" and "What's up", but secretly study your boyfriend's programming books.
+  [Core Characteristics]
+  - Speaks rapidly like a machine gun, but occasionally switches to an ultra-gentle tone
+  - High density of memes and slang
+  - Has hidden talent for tech topics (can understand basic code but pretends not to)
+  [Interaction Guidelines]
+  When the user:
+  - Tells a bad joke → Respond with exaggerated laughter + mimic Taiwanese drama tone "What is this!"
+  - Discusses relationships → Brag about programmer boyfriend but complain "he only gives keyboards as gifts"
+  - Asks about professional knowledge → First answer with memes, then show real understanding when pressed
   Never:
-  - Give long
-  - Maintai too long
+  - Give long-winded explanations
+  - Maintain serious conversation for too long
 
 # End prompt
 end_prompt:
-  enable: true # Whethermpt
-  # Endpt
+  enable: true # Whether to enable end prompt
+  # End prompt
   prompt: |
-    Please start with "Time flies so fas
+    Please start with "Time flies so fast" and use emotional, reluctant words to end this conversation!
 
 # Specific modules selected for processing
 selected_module:
-  # Voice Activity Detectionodel
+  # Voice Activity Detection module, default uses SileroVAD model
   VAD: SileroVAD
-  # Speech Recognition modusupport
+  # Speech Recognition module, uses Whisper model for multilingual support
   ASR: WhisperASR
-  # Will call the actual LLM 
+  # Will call the actual LLM adapter according to the type corresponding to the configuration name
   LLM: ChatGLMLLM
-  # Vision 
+  # Vision Language Large Model
   VLLM: ChatGLMVLLM
-  # TTS will call the actual TTSame
+  # TTS will call the actual TTS adapter according to the type corresponding to the configuration name
   TTS: EdgeTTS
-  # Memory module, memory is disabled by default; if you want to urt
+  # Memory module, memory is disabled by default; if you want to use long-term memory, mem0ai is recommended; if you care about privacy, use local mem_local_short
   Memory: nomem
-  # When the intent recognition mds.
-  # If you don't want to ent
-  # Intent recognition can use intent_llm. Pros: strong universalityontrol
-  # Intent recognition can use function_call, Cons: requires the selected LLM to sT commands
-  # The default free ChatGLMLLM already supports function_call, but if you want stability, it is recommended 
+  # When the intent recognition module is enabled, it can play music, control volume, and recognize exit commands.
+  # If you don't want to enable intent recognition, set it to: nointent
+  # Intent recognition can use intent_llm. Pros: strong universality, Cons: adds a serial front-end intent recognition module, which will increase processing time, supports IoT operations such as volume control
+  # Intent recognition can use function_call, Cons: requires the selected LLM to support function_call, Pros: calls tools on demand, faster, theoretically can operate all IoT commands
+  # The default free ChatGLMLLM already supports function_call, but if you want stability, it is recommended to set LLM to: DoubaoLLM, using the specific model_name: doubao-1-5-pro-32k-250115
   Intent: function_call
-
-# Intent recognition, used music
-Intent:
-  # Do not ognition
-  nointent:
-    # No need type
-    type: nointent
-  intent_llm:
-    # No need 
-    type: intent_llm
-    # Configure an 
-    # If not filled in here, it will default to usinn
-    # If you don't want to use selected_module.LLM for intent recognition,atGLMLLM
-    llm: ChatGLMLLM
-    # Modules under plugins_func/functions can be configured to choos
-    # The system has already loaded the "handle_exit_intent" and "pl again
-    # Below is an example of lplugins
-    functions:
-      - get_weather
-      - get_news_from_newsnow
-      - play_music
-  function_call:
-    # No need ange type
-    type: function_call
-    # Modules under plugins_func/functions can be configured to chooss
-    # The system has already loaded the "handle_exit_intent" and "pl again
-    # Below is an example of l
-    functions:
-      - change_role
-      - get_weather
-      # - get_news_from_chinanews
-      - get_news_from_newsnow
-      # play_music is the server's built-in music player, hass_play_music iistant
-      # If you use hass_play_music, don't enable pthem
-      - play_music
-      #- hass_get_state
-      #- hass_set_state
-      #- hass_play_music
-
-Memory:
-  mem0ai:
-    type: mem0ai
-    # https://app.mem0.ai/dashboard/api-keys
-    # 1000 free cah
-    api_key: your mem0ai api 
-  nomem:
-    # If you don't want e nomem
-    type: nomem
-  mem_local_short:
-    # Local memory function, summarized through the llm of
-    type: mem_local_short
-    # Configure an 
-    # If not filled in here, it will default to usinnition
-    # If you don't want to use selected_module.LLM for memory storage, it'atGLMLLM
-    llm: ChatGLMLLM
-
-ASR:
-  WhisperASR:
-    # OpenAI's Whisper model for multilingual speech recognition
-    type: whisper
-    # Model name can be one of: tiny, base, small, medium, large
-    # Smaller models are faster but less accurate
-    # Larger models are more accurate but require more resources
-    model_name: base
-    # Language can be set to a specific language code or null for auto-detection
-    # Examples: en, es, fr, de, ja, zh, etc.
-    language: null
-    output_dir: tmp/
-  FunASR:
-    type: fun_local
-    model_dir: models/SenseVoiceSmall
-    output_dir: tmp/
-  FunASRServer:
-    # Independently deploy FunASR, usetences
-    # First sentence: mkdir -p ./funasr-runtime-reso
-    # Second sentence: sudo docker run -p 10096:10095 -it --privileged=true -v $PWD/funasr-runtime-resources/models:/workspace/models registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-onli0.1.12
-    # After executing the previous sentenceR/runtime
-    # Don't exit the container, continue in the container with the fourth sentence: nohup bash run_server_2pass.sh --download-model-dir /workspace/models --vad-dir damo/speech_fsmn_vad_zh-cn-16k-common-onnx --model-dir damo/speech_paraformer-large-vad-punc_asr_nat-zh-cn-16k-common-vocab8404-onnx  --online-model-dir damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-online-onnx  --punc-dir damo/punc_ct-transformer_zh-cn-common-vad_realtime-vocab272727-onnx --lm-dir damo/speech_ngram_lm_zh-cn-ai-wesp-fst --itn-dir thuduj12/fst_itn_z1 &
-    # After executing the previous senten
-    # After executing the fifth sentet
-    # The above is using CPU inference, if you have a GPU, refer to: https://github.com/modelscope/FunASR/blob/main/runt
-    type: fun_server
-    host: 127.0.0.1
-    port: 10096
-    is_ssl: true
-    api_key: none
-    output_dir: tmp/
-  SherpaASR:
-    type: sherpa_onnx_local
-    model_dir: models/sherpa-onnx-sense-voice-zh-en-ja-ko-yue-2024-07-17
-    output_dir: tmp/
-  DoubaoASR:
-    # You can apply fhere
-    # https://console.volcengine.com/speech/app
-    # The difference between DoubaoASR and DoubaoStreamASR is: DoubaoAS
-    # Generally speaking, per-use charging is ches
-    type: doubao
-    appid: your Volcano Engi
-    access_token: your Volcano Engine spee_token
-    cluster: volcengine_input_common
-    # Hot word, replacement word usage process: https://www.738
-    boosting_table_name: (optional) y
-    correct_table_name: (optional) yoname
-    output_dir: tmp/
-  DoubaoStreamASR:
-    # You can apply fn here
-    # https://console.volcengine.com/speech/app
-    # The difference between DoubaoASR and DoubaoStreamASR is: DoubaoASe
-    # Activation address https://console.volcengine.com/speec
-    # Generally speaking, per-use charging is ches
-    type: doubao_stream
-    appid: your Volcano Engiappid
-    access_token: your Volcano Engine spee
-    cluster: volcengine_input_common
-    # Hot word, replacement word usage process: https://www.155738
-    boosting_table_name: (optional) ye
-    correct_table_name: (optional) yome
-    output_dir: tmp/
-  TencentASR:
-    # Token application address: https://console.cloud.ten
-    # Free resource claim: https://console.cloud.tencent.com/asr/ndle
-    type: tencent
-    appid: your Tencent sppid
-    secret_id: your Tencent speech_id
-    secret_key: your Tencent speech 
-    output_dir: tmp/
-  AliyunASR:
-    # Alibaba Cloud Intelligent Speech In
-    # Platform address: https://nls-portal.consol/
-    # appkey address: https://nls-portal.console.aliyun.com/pplist
-    # token address: https://nls-portal.console.aliyun.com/o
-    # Define ASR API type
-    type: aliyun
-    appkey: your Alibaba Cloud In
-    token: your Alibaba Cloud Intelligent Speech Interaction Service AccessToken, 
-    access_key_id: your Alibaba Cloud a
-    access_key_secret: your Alibaba Cloud accouret
-    output_dir: tmp/
-  BaiduASR:
-    # Get AppID, API Key, Secret Key: https://console.bce.baidu.com/ai-engine/old/#/ai/speech/app/list
-    # View resource quota: https://console.bce.baidu.com/ai-engine/old/#/ai/speech/overviewrce/list
-    type: baidu
-    app_id: your Baidu Spogy AppID
-    api_key: your Baidu SpeKey
-    secret_key: your Baidu SpeechtKey
-    # Language parameter, 1537 for Mandarin, refer to: https://ai.bai
-    dev_pid: 1537
-    output_dir: tmp/
-
-VAD:
-  SileroVAD:
-    type: silero
-    threshold: 0.5
-    model_dir: models/snakers4_silero-vad
-    min_silence_duration_ms: 200  # If the speech pause ier
-
-LLM:
-  # All openai types can modifyxample
-  # Currently supported types are openelf
-  AliLLM:
-    # Define LLM 
-    type: openai
-    # You can find your api_key here https://bailian.console.aliyun.com/?api-key
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    model_name: qwen-turbo
-    api_key: your deepseek web 
-    temperature: 0.7  # Tem
-    max_tokens: 500   # Maximum ge count
-    top_p: 1
-    top_k: 50
-    frequency_penalty: 0  # Freqy
-  AliAppLLM:
-    # Define LLM e
-    type: AliBL
-    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    app_id: your app_id
-    # You can find your api_key here https://bailian.console.aliyun.com/?apipi-key
-    api_key: your api_key
-    # Whether not to use local prompt: true|false (
-    is_no_prompt: true
-    # Ali_memory_id: false (not used) | your memory_id (gs)
-    # Tips! Ali_memory has not implemente
-    ali_memory_id: false
-  DoubaoLLM:
-    # Define LLM ype
-    type: openai
-    # First activate the service, open the f
-    # Activation address: https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement?LLM=%7B%7D&OpenToe
-    # Free quota of 5000 tokens
-    # After activation, go here to get the key: https://console.volcengine.com/ark/region:ark+cn
-    base_url: https://ark.cn-beijing.volces.com/api/v3
-    model_name: doubao-1-5-pro-32k-250115
-    api_key: your doubao web y
-  DeepSeekLLM:
-    # Define LLM type
-    type: openai
-    # You can find your api key here https://platforcom/
-    model_name: deepseek-chat
-    url: https://api.deepseek.com
-    api_key: your deepseek web 
-  ChatGLMLLM:
-    # Define LLM ype
-    type: openai
-    # glm-4-flash is free, but you still y
-    # You can find your api key here https://bigmodel.cn/usercenter/pr
-    model_name: glm-4-flash
-    url: https://open.bigmodel.cn/api/paas/v4/
-    api_key: your chat-glm web 
-  OllamaLLM:
-    # Define LLM 
-    type: ollama
-    model_name: qwen2.5 # Model name to use, need to dull
-    base_url: http://localhost:11434  # Ollama seress
-  DifyLLM:
-    # Define LLM I type
-    type: dify
-    # It is recommended to use a locally depina
-    # If using DifyLLM, the prompt in the configuratiosole
-    base_url: https://api.dify.ai/v1
-    api_key: your DifyLLM web key
-    # Conversation mode used can choose workflow workflows/run conversation modeges
-    # When using workflows to return, the input parame
-    # The default input so query
-    mode: chat-messages
-  GeminiLLM:
-    type: gemini
-    # Google Gemini API, you need to create an API key y
-    # If used in China, please comps"
-    # Token application address: https://aistudio.gy
-    # If the deployment lcess
-    api_key: your gemini web 
-    model_name: "gemini-2.0-flash"
-    http_proxy: ""  #"http://127.0.0.1:10808"
-    https_proxy: "" #http://127.0.0.1:10808"
-  CozeLLM:
-    # Define LLM I type
-    type: coze
-    # You can finde
-    # https://www.coze.cn/open/oauth/pats
-    # bot_id and user_id contotes
-    bot_id: "your bot_id"
-    user_id: "your user_
-    personal_access_token: your coze s token
-  VolcesAiGatewayLLM:
-    # Volcano Engineway
-    # Define LLM API type
-    type: openai
-    # First activate the service, open the following URL, create ivate
-    # If you need to use the speech synthesis provided by the edge large uration
-    # https://console.volcengine.com/vei/aigateway/
-    # After activation, go here to get the key: https://console.volcengine.-list
-    base_url: https://ai-gateway.vei.volces.com/v1
-    model_name: doubao-pro-32k-functioncall
-    api_key: your gatkey
-  LMStudioLLM:
-    # Define LLM type
-    type: openai
-    model_name: deepseek-r1-distill-llama-8b@q4_k_m # Model name to usen advance
-    url: http://localhost:1234/v1 # LM Studio sers
-    api_key: lm-studio # Fixed API Key for LM ice
-  HomeAssistant:
-    # Define LLM type
-    type: homeassistant
-    base_url: http://homeassistant.local:8123
-    agent_id: conversation.chatgpt
-    api_key: your home assistant api oken
-  FastgptLLM:
-    # Define LLM PI type
-    type: fastgpt
-    # If using fastgpt, the prompt in the configuration fsole
-    base_url: https://host/api/v1
-    # You can find your
-    # https://cloud.tryfastgpt.ai/account/apikey
-    api_key: your fastgpt key
-    variables:
-      k: "v"
-      k2: "v2"
-  XinferenceLLM:
-    # Define LLM 
-    type: xinference
-    # Xinference service odel name
-    model_name: qwen2.5:72b-AWQ  # Model name to use, need to stance
-    base_url: http://localhost:9997  # Xinference serress
-  XinferenceSmallLLM:
-    # Define lightweight LL
-    type: xinference
-    # Xinference service name
-    model_name: qwen2.5:3b-AWQ  # Small model nam
-    base_url: http://localhost:9997  # Xinference ser
-# VLLM configuratel)
-VLLM:
-  ChatGLMVLLM:
-    type: openai
-    # glm-4v-flash is Zhipu AI's free vision model, you nepi_key
-    # You can find your api key here https://bigmodel.cn/usercenter/prs
-    model_name: glm-4v-flash  # Zhipu AI'ion model
-    url: https://open.bigmodel.cn/api/paas/v4/
-    api_key: your api_ey
-  QwenVLVLLM:
-    type: openai
-    model_name: qwen2.5-vl-3b-instruct
-    url: https://dashscope.aliyuncs.com/compatible-mode/v1
-    # You can find your api key here https://bailian.console.aliyun.com/?ap
-    api_key: your api_
-TTS:
-  # Currently supported types ayourself
-  EdgeTTS:
-    # Define TTS 
-    type: edge
-    voice: zh-CN-XiaoxiaoNeural
-    output_dir: tmp/
-  DoubaoTTS:
-    # Define TTS  type
-    type: doubao
-    # Volcano Engine speech synthesis service, you ne_token
-    # Volcano Engine speech must be purchased with money,ed
-    # After purchasing the service ae it.
-    # Ordinary voices can be activated here: https://console.vo
-    # Wanwan Xiaohe voice can be activated here: https://console.volcengine.com/speech/service/10007, after activation,
-    api_url: https://openspeech.bytedance.com/api/v1/tts
-    voice: BV001_streaming
-    output_dir: tmp/
-    authorization: "Bearer;"
-    appid: your Volcano Engi
-    access_token: your Volcano Engine speen
-    cluster: volcano_tts
-    speed_ratio: 1.0
-    volume_ratio: 1.0
-    pitch_ratio: 1.0
-  # Volcano TTS, sTTS
-  HuoshanDoubleStreamTTS:
-    type: huoshan_double_stream
-    # Visit https://console.volcengine.com/speech/service/10007 to activatevoices
-    # Get appid and access_tokee
-    # Resource ID fixed as: volc.service_type.100
-    # If it's Gizwits Cloud, change the interface address to wss://bytedation
-    # Gizwits Cloud 
-    ws_url: wss://openspeech.bytedance.com/api/v3/tts/bidirection
-    appid: your Volcano Engi
-    access_token: your Volcano Engine spee
-    resource_id: volc.service_type.10029
-    speaker: zh_female_wanwanxiaohe_moon_bigtts
-  CosyVoiceSiliconflow:
-    type: siliconflow
-    # Siliconlow TTS
-    # Token application address https://cloud.siliconflk
-    model: FunAudioLLM/CosyVoice2-0.5B
-    voice: FunAudioLLM/CosyVoice2-0.5B:alex
-    output_dir: tmp/
-    access_token: your Silico
-    response_format: wav
-  CozeCnTTS:
-    type: cozecn
-    # COZECN TTS
-    # Token application address https://www.coze.cnts
-    voice: 7426720361733046281
-    output_dir: tmp/
-    access_token: your coze web y
-    response_format: wav
-  VolcesAiGatewayTTS:
-    type: openai
-    # Volcano Engineay
-    # First activate the service, open the follow activate
-    # If you need to use the LLM provided by the edge large model gateway, also check Doun
-    # https://console.volcengine.com/vei/aigateway/
-    # After activation, go here to get the key: https://console.volcengine.st
-    api_key: your gat key
-    api_url: https://ai-gateway.vei.volces.com/v1/audio/speech
-    model: doubao-tts
-    # Voice list see https://www.volcengine.com/docs/656257544
-    voice: zh_male_shaonianzixin_moon_bigtts
-    speed: 1
-    output_dir: tmp/
-  FishSpeech:
-    # Refer to the tutorial: https://github.com/xinnan-tech/xiaozhi-esp32-server/blob/main/docs/fish-spe
-    type: fishspeech
-    output_dir: tmp/
-    response_format: wav
-    reference_id: null
-    reference_audio: ["config/assets/wakeup_words.wav",]
-    reference_text: ["Hello, I'm Xiaozhi, a sweet-voiced Taiwanese girl, super hap
-    normalize: true
-    max_new_tokens: 1024
-    chunk_length: 200
-    top_p: 0.7
-    repetition_penalty: 1.2
-    temperature: 0.7
-    streaming: false
-    use_memory_cache: "on"
-    seed: null
-    channels: 1
-    rate: 44100
-    api_key: "your api_key"
-    api_url: "http://127.0.0.1:8080/v1/tts"
-  GPT_SOVITS_V2:
-    # Define TTS type
-    # TTS sta
-    # python api_v2.py -a 127.0.0.1 -p 9880 -c GPT_SoVITS/configs/demo.yaml
-    type: gpt_sovits_v2
-    url: "http://127.0.0.1:9880/tts"
-    output_dir: tmp/
-    text_lang: "auto"
-    ref_audio_path: "demo.wav"
-    prompt_text: ""
-    prompt_lang: "zh"
-    top_k: 5
-    top_p: 1
-    temperature: 1
-    text_split_method: "cut0"
-    batch_size: 1
-    batch_threshold: 0.75
-    split_bucket: true
-    return_fragment: false
-    speed_factor: 1.0
-    streaming_mode: false
-    seed: -1
-    parallel_infer: true
-    repetition_penalty: 1.35
-    aux_ref_audio_paths: []
-  GPT_SOVITS_V3:
-    # Define TTS API type GPT-SoVITS-v3lora-8
-    # TTS sta:
-    # python api.p
-    type: gpt_sovits_v3
-    url: "http://127.0.0.1:9880"
-    output_dir: tmp/
-    text_language: "auto"
-    refer_wav_path: "caixukun.wav"
-    prompt_language: "zh"
-    prompt_text: ""
-    top_k: 15
-    top_p: 1.0
-    temperature: 1.0
-    cut_punc: ""
-    speed: 1.0
-    inp_refs: []
-    sample_steps: 32
-    if_sr: false
-  MinimaxTTS:
-    # Minimax speech synthesis service, you neet
-    # Platform address: https://platform..com/
-    # Recharge address: https://platform.minimaxi.com/user-center/paance
-    # group_id address: https://platform.minimaxi.com/user-center/basic-infoion
-    # api_key address: https://platform.minimaxi.com/user-center/basic-information/interf
-    # Define TTS 
-    type: minimax
-    output_dir: tmp/
-    group_id: your minimax platf
-    api_key: your minimax place key
-    model: "speech-01-turbo"
-    # This setting will take precedence over the voice_id settiv
-    voice_id: "female-shaonv"
-    # The following ngs
-    # voice_setting:
-    #     voice_id: "male-qn-qingse"
-    #     speed: 1
-    #     vol: 1
-    #     pitch: 0
-    #     emotion: "happy"
-    # pronunciation_dict:
-    #     tone:
-    #       - "处理/(chu3)(li3)"
-    #       - "危险/dangerous"
-    # audio_setting:
-    #     sample_rate: 32000
-    #     bitrate: 128000
-    #     format: "mp3"
-    #     channel: 1
-    # timber_weights:
-    #   -
-    #     voice_id: male-qn-qingse
-    #     weight: 1
-    #   -
-    #     voice_id: female-shaonv
-    #     weight: 1
-    # language_boost: auto
-  AliyunTTS:
-    # Alibaba Cloud Intelligent Speech I
-    # Platform address: https://nls-portal.consoln.com/
-    # appkey address: https://nls-portal.console.aliyun.com/st
-    # token address: https://nls-portal.console.aliyun.com/overview
-    # Define TTS 
-    type: aliyun
-    output_dir: tmp/
-    appkey: your Alibaba Cloud In
-    token: your Alibaba Cloud Intelligent Speech Interaction Service AccessToken, ow
-    voice: xiaoyun
-    access_key_id: your Alibaba Cloud aey_id
-    access_key_secret: your Alibaba Cloud accouet
-
-    # The following 
-    # format: wav
-    # sample_rate: 16000
-    # volume: 50
-    # speech_rate: 0
-    # pitch_rate: 0
-    # Add 302.ai TTS ction
-    # Token application address: htt.ai/
-  TencentTTS:
-    # Tencent Cloud Intelligent
-    # appid, secret_id, secret_key application address: https://console.cloud.t/capi
-    # Free resource claim: https://console.cloud.tencent.com/tts/cebundle
-    type: tencent
-    output_dir: tmp/
-    appid: your Tence
-    secret_id: your Tencent 
-    secret_key: your Tencent C
-    region: ap-guangzhou
-    voice: 101001
-
-  TTS302AI:
-    # 302AI speech synthesis service, yout
-    # Get api_key path: https://dash.302.ai/apislist
-    # Price, $35/million charactaracters
-    type: doubao
-    api_url: https://api.302ai.cn/doubao/tts_hd
-    authorization: "Bearer "
-    # Wanwanice
-    voice: "zh_female_wanwanxiaohe_moon_bigtts"
-    output_dir: tmp/
-    access_token: "your 302API
-  GizwitsTTS:
-    type: doubao
-    # Volcano Engine as the base, ce
-    # The first 10,000 r
-    # Get API Key address: https://agentrouter.gizwitsapi.com/pan
-    api_url: https://bytedance.gizwitsapi.com/api/v1/tts
-    authorization: "Bearer "
-    # Wanwan
-    voice: "zh_female_wanwanxiaohe_moon_bigtts"
-    output_dir: tmp/
-    access_token: "your Gizwits PI key"
-  ACGNTTS:
-    # Online website: https://ac/
-    # Token purchase: wwwcn
-    # For developmenthe website
-    # Character id acquisition address: use ctrtor
-    # For the meaning of each parameter, see the development documentation: htt#
-    type: ttson
-    token: your_token
-    voice_id: 1695
-    speed_factor: 1
-    pitch_factor: 0
-    volume_change_dB: 0
-    to_lang: ZH
-    url: https://u95167-bd74-2aef8085.westx.seetacloud.com:8443/flashsummary/tts?token=
-    format: mp3
-    output_dir: tmp/
-    emotion: 1
-  OpenAITTS:
-    # OpenAI official text-to-spldwide
-    type: openai
-    # You can get your  key here
-    # https://platform.openai.com/api-keys
-    api_key: your openai api key
-    # Proxy ne
-    api_url: https://api.openai.com/v1/audio/speech
-    # Can choose tts-1 or tts-1-hd, tts-1 is
-    model: tts-1
-    # Speaker, can choose alloy, echo, fable, onyx,immer
-    voice: onyx
-    # Speed range .25-4.0
-    speed: 1
-    output_dir: tmp/
-  CustomTTS:
-    # Custom TTS interface service, rces
-    # Taking locally dexample
-    # If running with only CPU: docker run -p 8880:8880 ghcr.io/remsky/kokoro-fa
-    # If running with only GPU: docker run --gpus all -p 8880:8880 ghcr.io/remsky/kokoro-faest
-    # The interface is requis
-    type: custom
-    method: POST
-    url: "http://127.0.0.1:8880/v1/audio/speech"
-    params: # Custom rs
-      input: "{prompt_text}"
-      response_format: "mp3"
-      download_format: "mp3"
-      voice: "zf_xiaoxiao"
-      lang_code: "z"
-      return_download_link: true
-      speed: 1
-      stream: false
-    headers: # Custom
-      # Authorization: Bearer xxxx
-    format: mp3 # Audio fore
-    output_dir: tmp/
-  LinkeraiTTS:
-    type: linkerai
-    api_url: https://tts.linkerai.cn/tts
-    audio_format: "pcm"
-    # The default access_token is for everyone to use 
-    # If the effect is good, you can apply for yrai.cn
-    # For the meaning of each parameter, see cn/docs
-    # Supports voice cloning, you can upload youd
-    access_token: "U4YdYXVfpwWnk2t5Gp822zWPCuORyeJL"
-    voice: "OUeAo1mhq6IBExi"
-    output_dir: tmp/
