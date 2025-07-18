@@ -1,0 +1,10 @@
+# If you only want to install xiaozhi-server in a lightweight manner, using only local configuration files, you can ignore this file and don't need to modify anything in it
+# If you want to get configurations from manager-api, please read on:
+# Please copy this file to the xiaozhi-server/data directory. If there is no data directory, create one, and name the copied file .config.yaml
+# Note that if there is already a .config.yaml file in the data directory, please delete it first
+# First start manager-api and manager-web, register an account, the first registered account will be the administrator
+# As an administrator, go to the [Parameter Management] page, find [server.secret], copy its value. Note that server.secret will change every time you deploy from scratch
+# Open the .config.yaml file in this data directory, modify manager-api.secret to the server.secret you just copied
+server:
+  ip: 0.0.0.0
+  port: 8000
