@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <!-- 新增/编辑供应器对话框 -->
+    <!-- Add/Edit Provider Dialog -->
     <provider-dialog :title="dialogTitle" :visible.sync="dialogVisible" :form="providerForm" :model-types="modelTypes"
       @submit="handleSubmit" @cancel="dialogVisible = false" />
 
@@ -175,9 +175,9 @@ export default {
   },
   computed: {
     selectedModelTypeLabel() {
-      if (!this.searchModelType) return "（全部）";
+      if (!this.searchModelType) return "(All)";
       const selectedType = this.modelTypes.find(item => item.value === this.searchModelType);
-      return selectedType ? `（${selectedType.label}）` : "";
+      return selectedType ? `(${selectedType.label})` : "";
     },
     pageCount() {
       return Math.ceil(this.total / this.pageSize);
@@ -208,7 +208,7 @@ export default {
 
       // list.sort((a, b) => a.sort - b.sort);
 
-      // // 分页处理
+      // // Pagination processing
       // const start = (this.currentPage - 1) * this.pageSize;
       // return list.slice(start, start + this.pageSize);
     }
@@ -281,7 +281,7 @@ export default {
     handleSubmit({ form, done }) {
       this.loading = true;
       if (form.id) {
-        // 编辑
+        // Edit
         Api.model.updateModelProvider(form, ({ data }) => {
 
           if (data.code === 0) {
@@ -334,7 +334,7 @@ export default {
           if (data.code === 0) {
 
             this.isAllSelected = false;
-            this.fetchProviders(); // 刷新表格
+            this.fetchProviders(); // Refresh table
 
             this.$message.success({
               message: `Successfully deleted ${providerCount} providers`,

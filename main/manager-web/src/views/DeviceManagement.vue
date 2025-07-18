@@ -290,14 +290,14 @@ export default {
         row._submitting = false;
       });
     },
-    // 备注输入框：失焦时提交
+    // Remark input box: submit when blur
     onRemarkBlur(row) {
       row.isEdit = false;
       setTimeout(() => {
         this.submitRemark(row);
-      }, 100); // 延迟 100ms，避开 enter+blur 同时触发的窗口
+      }, 100); // Delay 100ms to avoid enter+blur triggering simultaneously
     },
-    // 备注输入框：按回车时提交
+    // Remark input box: submit when enter key is pressed
     onRemarkEnter(row) {
       row.isEdit = false;
       this.submitRemark(row);
