@@ -87,9 +87,9 @@ xiaozhi:
 # Moduleion
 module_test:
   test_sentences:
-    - "Hello, pleas
+    - "Hello, please introduce yourself"
     - "What's the weather like today?"
-    - "Please summarize the ba
+    - "Please summarize the basic principles and application prospects of quantum computing in 100 words"
 
 # Wake words, used 
 wakeup_words:
