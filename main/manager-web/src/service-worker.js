@@ -1,13 +1,13 @@
 /* global self, workbox */
 
-// 自定义Service Worker安装和激活的处理逻辑
+// Custom Service Worker installation and activation logic
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// CDN资源列表
+// CDN resource list
 const CDN_CSS = [
   'https://unpkg.com/element-ui@2.15.14/lib/theme-chalk/index.css',
   'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
@@ -22,39 +22,39 @@ const CDN_JS = [
   'https://unpkg.com/opus-decoder@0.7.7/dist/opus-decoder.min.js'
 ];
 
-// 当Service Worker被注入manifest后会自动执行
+// Automatically executes after the Service Worker is injected with manifest
 const manifest = self.__WB_MANIFEST || [];
 
-// 检查是否启用CDN模式
+// Check if CDN mode is enabled
 const isCDNEnabled = manifest.some(entry => 
   entry.url === 'cdn-mode' && entry.revision === 'enabled'
 );
 
-console.log(`Service Worker 已初始化, CDN模式: ${isCDNEnabled ? '启用' : '禁用'}`);
+console.log(`Service Worker initialized, CDN mode: ${isCDNEnabled ? 'enabled' : 'disabled'}`);
 
-// 注入workbox相关代码
+// Inject workbox related code
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 workbox.setConfig({ debug: false });
 
-// 开启workbox
+// Enable workbox
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
-// 预缓存离线页面
+// Precache offline page
 const OFFLINE_URL = '/offline.html';
 workbox.precaching.precacheAndRoute([
   { url: OFFLINE_URL, revision: null }
 ]);
 
-// 添加安装完成事件处理器，在控制台显示安装消息
+// Add installation complete event handler, display installation message in console
 self.addEventListener('install', event => {
   if (isCDNEnabled) {
-    console.log('Service Worker 已安装，开始缓存CDN资源');
+    console.log('Service Worker installed, starting to cache CDN resources');
   } else {
-    console.log('Service Worker 已安装，CDN模式禁用，仅缓存本地资源');
+    console.log('Service Worker installed, CDN mode disabled, caching local resources only');
   }
   
-  // 确保离线页面被缓存
+  // Ensure offline page is cached
   event.waitUntil(
     caches.open('offline-cache').then((cache) => {
       return cache.add(OFFLINE_URL);
@@ -62,9 +62,9 @@ self.addEventListener('install', event => {
   );
 });
 
-// 添加激活事件处理器
+// Add activation event handler
 self.addEventListener('activate', event => {
-  console.log('Service Worker 已激活，现在控制着页面');
+  console.log('Service Worker activated, now controlling pages');
   
   // 清理旧版本缓存
   event.waitUntil(

@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <!-- 主体内容 -->
+        <!-- Main content -->
         <div class="main-wrapper">
             <div class="content-panel">
                 <!-- Dictionary Type List (Left Side) -->
@@ -111,11 +111,11 @@
             </div>
         </div>
 
-        <!-- 使用字典类型编辑弹框组件 -->
+        <!-- Dictionary Type Edit Dialog Component -->
         <DictTypeDialog :visible.sync="dictTypeDialogVisible" :title="dictTypeDialogTitle" :dictTypeData="dictTypeForm"
             @save="saveDictType" />
 
-        <!-- 使用字典数据编辑弹框组件 -->
+        <!-- Dictionary Data Edit Dialog Component -->
         <DictDataDialog :visible.sync="dictDataDialogVisible" :title="dictDataDialogTitle" :dictData="dictDataForm"
             :dictTypeId="selectedDictType?.id" @save="saveDictData" />
         <el-footer style="flex-shrink:unset;">
@@ -167,7 +167,7 @@ export default {
                 sort: 0
             },
             search: '',
-            // 添加分页相关数据
+            // Pagination related data
             pageSizeOptions: [10, 20, 50, 100],
             currentPage: 1,
             pageSize: 10,
@@ -178,7 +178,7 @@ export default {
         this.loadDictTypeList()
     },
     methods: {
-        // 字典类型相关方法
+        // Dictionary type related methods
         loadDictTypeList() {
             this.dictTypeLoading = true
             dictApi.getDictTypeList({
@@ -255,7 +255,7 @@ export default {
             })
         },
 
-        // 字典数据相关方法
+        // Dictionary data related methods
         loadDictDataList(dictTypeId) {
             if (!dictTypeId) return
             this.dictDataLoading = true
@@ -357,7 +357,7 @@ export default {
             this.currentPage = 1
             this.loadDictDataList(this.selectedDictType.id)
         },
-        // 添加分页相关方法
+        // Pagination related methods
         handlePageSizeChange(val) {
             this.pageSize = val;
             this.currentPage = 1;

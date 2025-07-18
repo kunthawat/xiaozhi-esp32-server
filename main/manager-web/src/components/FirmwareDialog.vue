@@ -1,37 +1,37 @@
 <template>
   <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal="false" @close="handleClose" @open="handleOpen">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-      <el-form-item label="固件名称" prop="firmwareName">
-        <el-input v-model="form.firmwareName" placeholder="请输入固件名称(板子+版本号)"></el-input>
+      <el-form-item label="Firmware Name" prop="firmwareName">
+        <el-input v-model="form.firmwareName" placeholder="Enter firmware name (board+version)"></el-input>
       </el-form-item>
-      <el-form-item label="固件类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择固件类型" style="width: 100%;" filterable :disabled="isTypeDisabled">
+      <el-form-item label="Firmware Type" prop="type">
+        <el-select v-model="form.type" placeholder="Select firmware type" style="width: 100%;" filterable :disabled="isTypeDisabled">
           <el-option v-for="item in firmwareTypes" :key="item.key" :label="item.name" :value="item.key"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="版本号" prop="version">
-        <el-input v-model="form.version" placeholder="请输入版本号(x.x.x格式)"></el-input>
+      <el-form-item label="Version" prop="version">
+        <el-input v-model="form.version" placeholder="Enter version number (x.x.x format)"></el-input>
       </el-form-item>
-      <el-form-item label="固件文件" prop="firmwarePath">
+      <el-form-item label="Firmware File" prop="firmwarePath">
         <el-upload ref="upload" class="upload-demo" action="#" :http-request="handleUpload"
           :before-upload="beforeUpload" :accept="'.bin,.apk'" :limit="1" :multiple="false" :auto-upload="true"
           :on-remove="handleRemove">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传固件文件(.bin/.apk)，且不超过100MB</div>
+          <el-button size="small" type="primary">Click to Upload</el-button>
+          <div slot="tip" class="el-upload__tip">Only firmware files (.bin/.apk) are allowed, and size must not exceed 100MB</div>
         </el-upload>
         <el-progress v-if="isUploading || uploadStatus === 'success'" :percentage="uploadProgress"
           :status="uploadStatus"></el-progress>
         <div class="hint-text">
-          <span>温馨提示：请上传合并前的xiaozhi.bin文件，而不是合并后的merged-binary.bin文件</span>
+          <span>Note: Please upload the original xiaozhi.bin file, not the merged-binary.bin file</span>
         </div>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"></el-input>
+      <el-form-item label="Remarks" prop="remark">
+        <el-input type="textarea" v-model="form.remark" placeholder="Enter remarks"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="handleCancel">取 消</el-button>
-      <el-button type="primary" @click="handleSubmit">确 定</el-button>
+      <el-button @click="handleCancel">Cancel</el-button>
+      <el-button type="primary" @click="handleSubmit">Confirm</el-button>
     </div>
   </el-dialog>
 </template>
@@ -68,24 +68,24 @@ export default {
       dialogVisible: this.visible,
       rules: {
         firmwareName: [
-          { required: true, message: '请输入固件名称(板子+版本号)', trigger: 'blur' }
+          { required: true, message: 'Please enter firmware name (board+version)', trigger: 'blur' }
         ],
         type: [
-          { required: true, message: '请选择固件类型', trigger: 'change' }
+          { required: true, message: 'Please select firmware type', trigger: 'change' }
         ],
         version: [
-          { required: true, message: '请输入版本号', trigger: 'blur' },
-          { pattern: /^\d+\.\d+\.\d+$/, message: '版本号格式不正确，请输入x.x.x格式', trigger: 'blur' }
+          { required: true, message: 'Please enter version number', trigger: 'blur' },
+          { pattern: /^\d+\.\d+\.\d+$/, message: 'Invalid version format, please use x.x.x format', trigger: 'blur' }
         ],
         firmwarePath: [
-          { required: false, message: '请上传固件文件', trigger: 'change' }
+          { required: false, message: 'Please upload firmware file', trigger: 'change' }
         ]
       }
     }
   },
   computed: {
     isTypeDisabled() {
-      // 如果有id，说明是编辑模式，禁用类型选择
+      // If there's an id, it's edit mode, disable type selection
       return !!this.form.id
     }
   },

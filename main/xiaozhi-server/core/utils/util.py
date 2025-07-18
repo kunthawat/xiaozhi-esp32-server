@@ -108,14 +108,14 @@ def get_ip_info(ip_addr, logger):
 
 
 def write_json_file(file_path, data):
-    """将数据写入 JSON 文件"""
+    """Write data to a JSON file"""
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 def is_punctuation_or_emoji(char):
-    """检查字符是否为空格、指定标点或表情符号"""
-    # 定义需要去除的中英文标点（包括全角/半角）
+    """Check if a character is a space, specified punctuation, or emoji"""
+    # Define Chinese and English punctuation to be removed (including full-width/half-width)
     punctuation_set = {
         "，",
         ",",  # 中文逗号 + 英文逗号
@@ -130,7 +130,7 @@ def is_punctuation_or_emoji(char):
     }
     if char.isspace() or char in punctuation_set:
         return True
-    # 检查表情符号（保留原有逻辑）
+    # Check for emoji (preserve original logic)
     code_point = ord(char)
     emoji_ranges = [
         (0x1F600, 0x1F64F),
@@ -145,13 +145,13 @@ def is_punctuation_or_emoji(char):
 
 
 def get_string_no_punctuation_or_emoji(s):
-    """去除字符串首尾的空格、标点符号和表情符号"""
+    """Remove spaces, punctuation, and emoji from the beginning and end of a string"""
     chars = list(s)
-    # 处理开头的字符
+    # Process characters at the beginning
     start = 0
     while start < len(chars) and is_punctuation_or_emoji(chars[start]):
         start += 1
-    # 处理结尾的字符
+    # Process characters at the end
     end = len(chars) - 1
     while end >= start and is_punctuation_or_emoji(chars[end]):
         end -= 1
@@ -159,7 +159,7 @@ def get_string_no_punctuation_or_emoji(s):
 
 
 def remove_punctuation_and_length(text):
-    # 全角符号和半角符号的Unicode范围
+    # Unicode range for full-width and half-width symbols
     full_width_punctuations = (
         "！＂＃＄％＆＇（）＊＋，－。／：；＜＝＞？＠［＼］＾＿｀｛｜｝～"
     )
@@ -167,7 +167,7 @@ def remove_punctuation_and_length(text):
     space = " "  # 半角空格
     full_width_space = "　"  # 全角空格
 
-    # 去除全角和半角符号以及空格
+    # Remove full-width and half-width symbols and spaces
     result = "".join(
         [
             char
@@ -186,18 +186,18 @@ def remove_punctuation_and_length(text):
 
 def check_model_key(modelType, modelKey):
     if "你" in modelKey:
-        return f"配置错误: {modelType} 的 API key 未设置,当前值为: {modelKey}"
+        return f"Configuration error: API key for {modelType} is not set, current value is: {modelKey}"
     return None
 
 
 def parse_string_to_list(value, separator=";"):
     """
-    将输入值转换为列表
+    Convert input value to a list
     Args:
-        value: 输入值，可以是 None、字符串或列表
-        separator: 分隔符，默认为分号
+        value: Input value, can be None, string, or list
+        separator: Separator, default is semicolon
     Returns:
-        list: 处理后的列表
+        list: Processed list
     """
     if value is None or value == "":
         return []
@@ -211,42 +211,42 @@ def parse_string_to_list(value, separator=";"):
 def check_ffmpeg_installed():
     ffmpeg_installed = False
     try:
-        # 执行ffmpeg -version命令，并捕获输出
+        # Execute ffmpeg -version command and capture output
         result = subprocess.run(
             ["ffmpeg", "-version"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
-            check=True,  # 如果返回码非零则抛出异常
+            check=True,  # Throw exception if return code is non-zero
         )
-        # 检查输出中是否包含版本信息（可选）
+        # Check if output contains version information (optional)
         output = result.stdout + result.stderr
         if "ffmpeg version" in output.lower():
             ffmpeg_installed = True
         return False
     except (subprocess.CalledProcessError, FileNotFoundError):
-        # 命令执行失败或未找到
+        # Command execution failed or not found
         ffmpeg_installed = False
     if not ffmpeg_installed:
-        error_msg = "您的电脑还没正确安装ffmpeg\n"
-        error_msg += "\n建议您：\n"
-        error_msg += "1、按照项目的安装文档，正确进入conda环境\n"
-        error_msg += "2、查阅安装文档，如何在conda环境中安装ffmpeg\n"
+        error_msg = "Your computer does not have ffmpeg correctly installed\n"
+        error_msg += "\nRecommendations:\n"
+        error_msg += "1. Follow the project's installation documentation to correctly enter the conda environment\n"
+        error_msg += "2. Refer to the installation documentation on how to install ffmpeg in the conda environment\n"
         raise ValueError(error_msg)
 
 
 def extract_json_from_string(input_string):
-    """提取字符串中的 JSON 部分"""
+    """Extract JSON portion from a string"""
     pattern = r"(\{.*\})"
-    match = re.search(pattern, input_string, re.DOTALL)  # 添加 re.DOTALL
+    match = re.search(pattern, input_string, re.DOTALL)  # Add re.DOTALL
     if match:
-        return match.group(1)  # 返回提取的 JSON 字符串
+        return match.group(1)  # Return the extracted JSON string
     return None
 
 
 def analyze_emotion(text):
     """
-    分析文本情感并返回对应的emoji名称（支持中英文）
+    Analyze text sentiment and return the corresponding emoji name (supports Chinese and English)
     """
     if not text or not isinstance(text, str):
         return "neutral"
@@ -898,11 +898,11 @@ def check_asr_update(before_config, new_config):
 
 def filter_sensitive_info(config: dict) -> dict:
     """
-    过滤配置中的敏感信息
+    Filter sensitive information in configuration
     Args:
-        config: 原始配置字典
+        config: Original configuration dictionary
     Returns:
-        过滤后的配置字典
+        Filtered configuration dictionary
     """
     sensitive_keys = [
         "api_key",
@@ -931,10 +931,10 @@ def filter_sensitive_info(config: dict) -> dict:
 
 
 def get_vision_url(config: dict) -> str:
-    """获取 vision URL
+    """Get vision URL
 
     Args:
-        config: 配置字典
+        config: Configuration dictionary
 
     Returns:
         str: vision URL
@@ -950,15 +950,15 @@ def get_vision_url(config: dict) -> str:
 
 def is_valid_image_file(file_data: bytes) -> bool:
     """
-    检查文件数据是否为有效的图片格式
+    Check if file data is a valid image format
 
     Args:
-        file_data: 文件的二进制数据
+        file_data: Binary data of the file
 
     Returns:
-        bool: 如果是有效的图片格式返回True，否则返回False
+        bool: Returns True if it's a valid image format, otherwise False
     """
-    # 常见图片格式的魔数（文件头）
+    # Common image format magic numbers (file headers)
     image_signatures = {
         b"\xff\xd8\xff": "JPEG",
         b"\x89PNG\r\n\x1a\n": "PNG",
@@ -970,7 +970,7 @@ def is_valid_image_file(file_data: bytes) -> bool:
         b"RIFF": "WEBP",
     }
 
-    # 检查文件头是否匹配任何已知的图片格式
+    # Check if the file header matches any known image format
     for signature in image_signatures:
         if file_data.startswith(signature):
             return True
@@ -980,19 +980,19 @@ def is_valid_image_file(file_data: bytes) -> bool:
 
 def sanitize_tool_name(name: str) -> str:
     """Sanitize tool names for OpenAI compatibility."""
-    # 支持中文、英文字母、数字、下划线和连字符
+    # Support Chinese, English letters, numbers, underscores and hyphens
     return re.sub(r"[^a-zA-Z0-9_\-\u4e00-\u9fff]", "_", name)
 
 
 def validate_mcp_endpoint(mcp_endpoint: str) -> bool:
     """
-    校验MCP接入点格式
+    Validate MCP endpoint format
 
     Args:
-        mcp_endpoint: MCP接入点字符串
+        mcp_endpoint: MCP endpoint string
 
     Returns:
-        bool: 是否有效
+        bool: Whether it's valid
     """
     # 1. 检查是否以ws开头
     if not mcp_endpoint.startswith("ws"):
