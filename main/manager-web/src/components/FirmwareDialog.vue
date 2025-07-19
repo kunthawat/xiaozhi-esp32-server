@@ -90,7 +90,7 @@ export default {
     }
   },
   created() {
-    // 移除 getDictDataByType 调用
+    // Remove getDictDataByType call
   },
   watch: {
     visible(val) {
@@ -101,7 +101,7 @@ export default {
     },
   },
   methods: {
-    // 移除 getFirmwareTypes 方法
+    // Remove getFirmwareTypes method
     handleClose() {
       this.dialogVisible = false;
       this.$emit('cancel');
@@ -113,9 +113,9 @@ export default {
     handleSubmit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          // 如果是新增模式且没有上传文件，则提示错误
+          // If in add mode and no file uploaded, show error
           if (!this.form.id && !this.form.firmwarePath) {
-            this.$message.error('请上传固件文件')
+            this.$message.error('Please upload firmware file')
             return
           }
           // 提交成功后将关闭对话框的逻辑交给父组件处理

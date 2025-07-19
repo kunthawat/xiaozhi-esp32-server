@@ -11,30 +11,30 @@ import lombok.EqualsAndHashCode;
 import xiaozhi.common.entity.BaseEntity;
 
 /**
- * 数据字典
+ * Data Dictionary
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("sys_dict_data")
 public class SysDictDataEntity extends BaseEntity {
     /**
-     * 字典类型ID
+     * Dictionary Type ID
      */
     private Long dictTypeId;
     /**
-     * 字典标签
+     * Dictionary Label
      */
     private String dictLabel;
     /**
-     * 字典值
+     * Dictionary Value
      */
     private String dictValue;
     /**
-     * 备注
+     * Remarks
      */
     private String remark;
     /**
-     * 排序
+     * Sort Order
      */
     private Integer sort;
     /**

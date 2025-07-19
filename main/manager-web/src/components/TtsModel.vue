@@ -7,35 +7,35 @@
     <div class="scroll-wrapper">
       <div class="table-container" ref="tableContainer" @scroll="handleScroll">
         <el-table v-loading="loading" :data="filteredTtsModels" style="width: 100%;" class="data-table"
-          header-row-class-name="table-header" :fit="true" element-loading-text="拼命加载中"
+          header-row-class-name="table-header" :fit="true" element-loading-text="Loading..."
           element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
-          <el-table-column label="选择" width="50" align="center">
+          <el-table-column label="Select" width="50" align="center">
             <template slot-scope="scope">
               <el-checkbox v-model="scope.row.selected"></el-checkbox>
             </template>
           </el-table-column>
-          <el-table-column label="音色编码" align="center">
+          <el-table-column label="Voice Code" align="center">
             <template slot-scope="scope">
               <el-input v-if="scope.row.editing" v-model="scope.row.voiceCode"></el-input>
               <span v-else>{{ scope.row.voiceCode }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="音色名称" align="center">
+          <el-table-column label="Voice Name" align="center">
             <template slot-scope="scope">
               <el-input v-if="scope.row.editing" v-model="scope.row.voiceName"></el-input>
               <span v-else>{{ scope.row.voiceName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="语言类型" align="center">
+          <el-table-column label="Language Type" align="center">
             <template slot-scope="scope">
               <el-input v-if="scope.row.editing" v-model="scope.row.languageType"></el-input>
               <span v-else>{{ scope.row.languageType }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="!showReferenceColumns" label="试听" align="center" class-name="audio-column">
+          <el-table-column v-if="!showReferenceColumns" label="Listen" align="center" class-name="audio-column">
             <template slot-scope="scope">
               <div class="custom-audio-container">
-                <el-input v-if="scope.row.editing" v-model="scope.row.voiceDemo" placeholder="请输入MP3地址"
+                <el-input v-if="scope.row.editing" v-model="scope.row.voiceDemo" placeholder="Enter MP3 URL"
                   class="audio-input">
                 </el-input>
                 <AudioPlayer v-else-if="isValidAudioUrl(scope.row.voiceDemo)" :audioUrl="scope.row.voiceDemo" />

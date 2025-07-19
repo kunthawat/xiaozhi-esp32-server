@@ -330,31 +330,31 @@ export default {
               intentModelId: data.data.intentModelId
             }
           };
-          // 后端只给了最小映射：[{ id, agentId, pluginId }, ...]
+          // Backend only provided minimal mapping: [{ id, agentId, pluginId }, ...]
           const savedMappings = data.data.functions || [];
 
-          // 先保证 allFunctions 已经加载（如果没有，则先 fetchAllFunctions）
+          // First ensure allFunctions is loaded (if not, call fetchAllFunctions first)
           const ensureFuncs = this.allFunctions.length
             ? Promise.resolve()
             : this.fetchAllFunctions();
 
           ensureFuncs.then(() => {
-            // 合并：按照 pluginId（id 字段）把全量元数据信息补齐
+            // Merge: Complete all metadata information according to pluginId (id field)
             this.currentFunctions = savedMappings.map(mapping => {
               const meta = this.allFunctions.find(f => f.id === mapping.pluginId);
               if (!meta) {
-                // 插件定义没找到，退化处理
+                // Plugin definition not found, fallback handling
                 return { id: mapping.pluginId, name: mapping.pluginId, params: {} };
               }
               return {
                 id: mapping.pluginId,
                 name: meta.name,
-                // 后端如果还有 paramInfo 字段就用 mapping.paramInfo，否则用 meta.params 默认值
+                // If backend has paramInfo field, use mapping.paramInfo, otherwise use meta.params default value
                 params: mapping.paramInfo || { ...meta.params },
-                fieldsMeta: meta.fieldsMeta  // 保留以便对话框渲染 tooltip
+                fieldsMeta: meta.fieldsMeta  // Keep for dialog to render tooltip
               };
             });
-            // 备份原始，以备取消时恢复
+            // Backup original for recovery when canceled
             this.originalFunctions = JSON.parse(JSON.stringify(this.currentFunctions));
           });
         } else {
@@ -432,7 +432,7 @@ export default {
       });
     },
     openFunctionDialog() {
-      // 显示编辑对话框时，确保 allFunctions 已经加载
+      // When showing edit dialog, ensure allFunctions is loaded
       if (this.allFunctions.length === 0) {
         this.fetchAllFunctions().then(() => this.showFunctionDialog = true);
       } else {

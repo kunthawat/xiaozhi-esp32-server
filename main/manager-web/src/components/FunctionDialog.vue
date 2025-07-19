@@ -1,9 +1,9 @@
 <template>
   <el-drawer :visible.sync="dialogVisible" direction="rtl" size="80%" :wrapperClosable="false" :withHeader="false">
-    <!-- 自定义标题区域 -->
+    <!-- Custom title area -->
     <div class="custom-header">
       <div class="header-left">
-        <h3 class="bold-title">功能管理</h3>
+        <h3 class="bold-title">Function Management</h3>
       </div>
       <button class="custom-close-btn" @click="closeDialog">×</button>
     </div>

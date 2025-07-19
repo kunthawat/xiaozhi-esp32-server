@@ -3,11 +3,12 @@
         <HeaderBar />
 
         <div class="operation-bar">
-            <h2 class="page-title">参数管理</h2>
+            <h2 class="page-title">Parameter Management</h2>
+
             <div class="right-operations">
-                <el-input placeholder="请输入参数编码或备注查询" v-model="searchCode" class="search-input"
+                <el-input placeholder="Enter parameter code or remarks to search" v-model="searchCode" class="search-input"
                     @keyup.enter.native="handleSearch" clearable />
-                <el-button class="btn-search" @click="handleSearch">搜索</el-button>
+                <el-button class="btn-search" @click="handleSearch">Search</el-button>
             </div>
         </div>
 
@@ -16,33 +17,32 @@
                 <div class="content-area">
                     <el-card class="params-card" shadow="never">
                         <el-table ref="paramsTable" :data="paramsList" class="transparent-table" v-loading="loading"
-                            element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+                            element-loading-text="Loading..." element-loading-spinner="el-icon-loading"
                             element-loading-background="rgba(255, 255, 255, 0.7)"
                             :header-cell-class-name="headerCellClassName">
-                            <el-table-column label="选择" align="center" width="120">
+                            <el-table-column label="Select" align="center" width="120">
                                 <template slot-scope="scope">
                                     <el-checkbox v-model="scope.row.selected"></el-checkbox>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="参数编码" prop="paramCode" align="center"></el-table-column>
-                            <el-table-column label="参数值" prop="paramValue" align="center" show-overflow-tooltip>
+                            <el-table-column label="Parameter Code" prop="paramCode" align="center"></el-table-column>
+                            <el-table-column label="Parameter Value" prop="paramValue" align="center" show-overflow-tooltip>
                                 <template slot-scope="scope">
                                     <div v-if="isSensitiveParam(scope.row.paramCode)">
-                                        <span v-if="!scope.row.showValue">{{ maskSensitiveValue(scope.row.paramValue)
-                                        }}</span>
-                                        <span v-else>{{ scope.row.paramValue }}</span>
+                                        <span v-if="scope.row.showValue">{{ scope.row.paramValue }}</span>
+                                        <span v-else>******</span>
                                         <el-button size="mini" type="text" @click="toggleSensitiveValue(scope.row)">
-                                            {{ scope.row.showValue ? '隐藏' : '查看' }}
+                                            {{ scope.row.showValue ? 'Hide' : 'View' }}
                                         </el-button>
                                     </div>
                                     <span v-else>{{ scope.row.paramValue }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="备注" prop="remark" align="center"></el-table-column>
-                            <el-table-column label="操作" align="center">
+                            <el-table-column label="Remarks" prop="remark" align="center"></el-table-column>
+                            <el-table-column label="Actions" align="center">
                                 <template slot-scope="scope">
-                                    <el-button size="mini" type="text" @click="editParam(scope.row)">编辑</el-button>
-                                    <el-button size="mini" type="text" @click="deleteParam(scope.row)">删除</el-button>
+                                    <el-button size="mini" type="text" @click="editParam(scope.row)">Edit</el-button>
+                                    <el-button size="mini" type="text" @click="deleteParam(scope.row)">Delete</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -50,32 +50,32 @@
                         <div class="table_bottom">
                             <div class="ctrl_btn">
                                 <el-button size="mini" type="primary" class="select-all-btn" @click="handleSelectAll">
-                                    {{ isAllSelected ? '取消全选' : '全选' }}
+                                    {{ isAllSelected ? 'Deselect All' : 'Select All' }}
                                 </el-button>
-                                <el-button size="mini" type="success" @click="showAddDialog">新增</el-button>
+                                <el-button size="mini" type="success" @click="showAddDialog">Add</el-button>
                                 <el-button size="mini" type="danger" icon="el-icon-delete"
-                                    @click="deleteSelectedParams">删除</el-button>
+                                    @click="deleteSelectedParams">Delete</el-button>
                             </div>
                             <div class="custom-pagination">
                                 <el-select v-model="pageSize" @change="handlePageSizeChange" class="page-size-select">
-                                    <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item}条/页`"
+                                    <el-option v-for="item in pageSizeOptions" :key="item" :label="`${item} items/page`"
                                         :value="item">
                                     </el-option>
                                 </el-select>
                                 <button class="pagination-btn" :disabled="currentPage === 1" @click="goFirst">
-                                    首页
+                                    First
                                 </button>
                                 <button class="pagination-btn" :disabled="currentPage === 1" @click="goPrev">
-                                    上一页
+                                    Previous
                                 </button>
                                 <button v-for="page in visiblePages" :key="page" class="pagination-btn"
                                     :class="{ active: page === currentPage }" @click="goToPage(page)">
                                     {{ page }}
                                 </button>
                                 <button class="pagination-btn" :disabled="currentPage === pageCount" @click="goNext">
-                                    下一页
+                                    Next
                                 </button>
-                                <span class="total-text">共{{ total }}条记录</span>
+                                <span class="total-text">Total: {{ total }} records</span>
                             </div>
                         </div>
                     </el-card>
@@ -83,48 +83,38 @@
             </div>
         </div>
 
-        <!-- 新增/编辑参数对话框 -->
+        <!-- Add/Edit Parameter Dialog -->
         <param-dialog :title="dialogTitle" :visible.sync="dialogVisible" :form="paramForm" @submit="handleSubmit"
             @cancel="dialogVisible = false" />
-        <el-footer>
-            <version-footer />
-        </el-footer>
     </div>
 </template>
 
 <script>
-import Api from "@/apis/api";
-import HeaderBar from "@/components/HeaderBar.vue";
-import ParamDialog from "@/components/ParamDialog.vue";
-import VersionFooter from "@/components/VersionFooter.vue";
+import Api from '@/apis/api';
+import HeaderBar from '@/components/HeaderBar.vue';
+import ParamDialog from '@/components/ParamDialog.vue';
+
 export default {
-    components: { HeaderBar, ParamDialog, VersionFooter },
+    components: {
+        HeaderBar,
+        ParamDialog
+    },
     data() {
         return {
-            searchCode: "",
+            searchCode: '',
             paramsList: [],
-            currentPage: 1,
             loading: false,
+            currentPage: 1,
             pageSize: 10,
             pageSizeOptions: [10, 20, 50, 100],
             total: 0,
             dialogVisible: false,
-            dialogTitle: "新增参数",
+            dialogTitle: "Add Parameter",
+            paramForm: {},
             isAllSelected: false,
             sensitive_keys: ["api_key", "personal_access_token", "access_token", "token", "secret", "access_key_secret", "secret_key"],
-            paramForm: {
-                id: null,
-                paramCode: "",
-                paramValue: "",
-                remark: ""
-            },
         };
     },
-    created() {
-        this.fetchParams();
-
-    },
-
     computed: {
         pageCount() {
             return Math.ceil(this.total / this.pageSize);
@@ -145,99 +135,101 @@ export default {
             return pages;
         },
     },
+    created() {
+        this.fetchParams();
+    },
     methods: {
+        headerCellClassName({ columnIndex }) {
+            if (columnIndex === 0) {
+                return "custom-selection-header";
+            }
+            return "";
+        },
         handlePageSizeChange(val) {
             this.pageSize = val;
             this.currentPage = 1;
             this.fetchParams();
         },
-        fetchParams() {
-            this.loading = true;
-            Api.admin.getParamsList(
-                {
-                    page: this.currentPage,
-                    limit: this.pageSize,
-                    paramCode: this.searchCode,
-                },
-                ({ data }) => {
-                    this.loading = false;
-                    if (data.code === 0) {
-                        this.paramsList = data.data.list.map(item => ({
-                            ...item,
-                            selected: false,
-                            showValue: false
-                        }));
-                        this.total = data.data.total;
-                    } else {
-                        this.$message.error({
-                            message: data.msg || '获取参数列表失败',
-                            showClose: true
-                        });
-                    }
-                }
-            );
-        },
         handleSearch() {
             this.currentPage = 1;
             this.fetchParams();
         },
-        handleSelectAll() {
-            this.isAllSelected = !this.isAllSelected;
-            this.paramsList.forEach(row => {
-                row.selected = this.isAllSelected;
+        fetchParams() {
+            this.loading = true;
+            Api.admin.getParamList({
+                page: this.currentPage,
+                limit: this.pageSize,
+                paramCode: this.searchCode
+            }, ({ data }) => {
+                this.loading = false;
+                if (data.code === 0) {
+                    this.paramsList = data.data.list.map(item => ({
+                        ...item,
+                        selected: false,
+                        showValue: false
+                    }));
+                    this.total = data.data.total;
+                } else {
+                    this.$message.error({
+                        message: data.msg || 'Failed to get parameter list',
+                        showClose: true
+                    });
+                }
             });
         },
         showAddDialog() {
-            this.dialogTitle = "新增参数";
+            this.dialogTitle = "Add Parameter";
             this.paramForm = {
                 id: null,
-                paramCode: "",
-                paramValue: "",
-                remark: ""
+                paramCode: '',
+                paramValue: '',
+                remark: ''
             };
             this.dialogVisible = true;
         },
         editParam(row) {
-            this.dialogTitle = "编辑参数";
+            this.dialogTitle = "Edit Parameter";
             this.paramForm = { ...row };
             this.dialogVisible = true;
         },
-
         handleSubmit({ form, done }) {
             if (form.id) {
-                // 编辑
+                // Edit
                 Api.admin.updateParam(form, ({ data }) => {
                     if (data.code === 0) {
                         this.$message.success({
-                            message: "修改成功",
+                            message: "Modified successfully",
                             showClose: true
                         });
-                        this.dialogVisible = false;
                         this.fetchParams();
+                        done();
+                        this.dialogVisible = false;
+                    } else {
+                        done(data.msg || 'Failed to update parameter');
                     }
-                    done && done();
                 });
             } else {
-                // 新增
+                // Add
                 Api.admin.addParam(form, ({ data }) => {
                     if (data.code === 0) {
                         this.$message.success({
-                            message: "新增成功",
+                            message: "Added successfully",
                             showClose: true
                         });
-                        this.dialogVisible = false;
                         this.fetchParams();
+                        done();
+                        this.dialogVisible = false;
+                    } else {
+                        done(data.msg || 'Failed to add parameter');
                     }
-                    done && done();
                 });
             }
         },
-
         deleteSelectedParams() {
             const selectedRows = this.paramsList.filter(row => row.selected);
             if (selectedRows.length === 0) {
                 this.$message.warning({
-                    message: "请先选择需要删除的参数",
+                    message: "Please select parameters to delete first",
                     showClose: true
                 });
                 return;
@@ -245,68 +237,68 @@ export default {
             this.deleteParam(selectedRows);
         },
         deleteParam(row) {
-            // 处理单个参数或参数数组
+            // Handle single parameter or parameter array
             const params = Array.isArray(row) ? row : [row];
 
             if (Array.isArray(row) && row.length === 0) {
                 this.$message.warning({
-                    message: "请先选择需要删除的参数",
+                    message: "Please select parameters to delete first",
                     showClose: true
                 });
                 return;
             }
 
             const paramCount = params.length;
-            this.$confirm(`确定要删除选中的${paramCount}个参数吗？`, '警告', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                distinguishCancelAndClose: true
+            this.$confirm(`Are you sure you want to delete the selected ${paramCount} parameter(s)?`, 'Warning', {
+                confirmButtonText: 'Confirm',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
             }).then(() => {
-                const ids = params.map(param => param.id);
-                if (ids.some(id => isNaN(id))) {
-                    this.$message.error({
-                        message: '存在无效的参数ID',
-                        showClose: true
-                    });
-                    return;
-                }
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Deleting...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
 
-                Api.admin.deleteParam(ids, ({ data }) => {
-                    if (data.code === 0) {
+                const promises = params.map(param => {
+                    return new Promise((resolve, reject) => {
+                        Api.admin.deleteParam(param.id, ({ data }) => {
+                            if (data.code === 0) {
+                                resolve();
+                            } else {
+                                reject(data.msg || 'Delete failed');
+                            }
+                        });
+                    });
+                });
+
+                Promise.all(promises)
+                    .then(() => {
                         this.$message.success({
-                            message: `成功删除${paramCount}个参数`,
+                            message: `Successfully deleted ${paramCount} parameter(s)`,
                             showClose: true
                         });
                         this.fetchParams();
-                    } else {
+                    })
+                    .catch(error => {
                         this.$message.error({
-                            message: data.msg || '删除失败，请重试',
+                            message: error || 'Error occurred during deletion',
                             showClose: true
                         });
-                    }
-                });
-            }).catch(action => {
-                if (action === 'cancel') {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除操作',
-                        duration: 1000
+                    })
+                    .finally(() => {
+                        loading.close();
                     });
-                } else {
-                    this.$message({
-                        type: 'info',
-                        message: '操作已关闭',
-                        duration: 1000
-                    });
-                }
+            }).catch(() => {
+                // User canceled operation
             });
         },
-        headerCellClassName({ columnIndex }) {
-            if (columnIndex === 0) {
-                return "custom-selection-header";
-            }
-            return "";
+        handleSelectAll() {
+            this.isAllSelected = !this.isAllSelected;
+            this.paramsList.forEach(row => {
+                row.selected = this.isAllSelected;
+            });
         },
         goFirst() {
             this.currentPage = 1;
@@ -329,17 +321,12 @@ export default {
             this.fetchParams();
         },
         isSensitiveParam(paramCode) {
-            return this.sensitive_keys.some(key => paramCode.toLowerCase().includes(key.toLowerCase()));
-        },
-        maskSensitiveValue(value) {
-            if (!value) return '';
-            if (value.length <= 8) return '****';
-            return value.substring(0, 4) + '****' + value.substring(value.length - 4);
+            return this.sensitive_keys.some(key => paramCode.toLowerCase().includes(key));
         },
         toggleSensitiveValue(row) {
-            this.$set(row, 'showValue', !row.showValue);
-        },
-    },
+            row.showValue = !row.showValue;
+        }
+    }
 };
 </script>
 
@@ -413,7 +400,7 @@ export default {
     flex: 1;
     height: 100%;
     min-width: 600px;
-    overflow: auto;
+    overflow-x: auto;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -442,7 +429,6 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
-    padding-bottom: 10px;
 }
 
 .ctrl_btn {
@@ -473,6 +459,11 @@ export default {
         color: white;
     }
 
+    .el-button--success {
+        background: #5bc98c;
+        color: white;
+    }
+
     .el-button--danger {
         background: #fd5b63;
         color: white;
@@ -482,7 +473,7 @@ export default {
 .custom-pagination {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 
     .el-select {
         margin-right: 8px;
@@ -490,8 +481,8 @@ export default {
 
     .pagination-btn:first-child,
     .pagination-btn:nth-child(2),
-    .pagination-btn:nth-last-child(2),
-    .pagination-btn:nth-child(3) {
+    .pagination-btn:nth-child(3),
+    .pagination-btn:nth-last-child(2) {
         min-width: 60px;
         height: 32px;
         padding: 0 12px;
@@ -513,7 +504,7 @@ export default {
         }
     }
 
-    .pagination-btn:not(:first-child):not(:nth-child(3)):not(:nth-child(2)):not(:nth-last-child(2)) {
+    .pagination-btn:not(:first-child):not(:nth-child(2)):not(:nth-child(3)):not(:nth-last-child(2)) {
         min-width: 28px;
         height: 32px;
         padding: 0;
@@ -583,6 +574,14 @@ export default {
     }
 }
 
+:deep(.el-table .el-button--text) {
+    color: #7079aa !important;
+}
+
+:deep(.el-table .el-button--text:hover) {
+    color: #5a64b5 !important;
+}
+
 
 :deep(.el-checkbox__inner) {
     background-color: #eeeeee !important;
@@ -618,25 +617,6 @@ export default {
             }
         }
     }
-}
-
-:deep(.el-table .el-button--text) {
-    color: #7079aa;
-}
-
-:deep(.el-table .el-button--text:hover) {
-    color: #5a64b5;
-}
-
-.el-button--success {
-    background: #5bc98c;
-    color: white;
-}
-
-:deep(.el-table .cell) {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .page-size-select {
@@ -680,12 +660,6 @@ export default {
         position: relative;
         transform: rotate(0deg);
         transition: transform 0.3s;
-    }
-}
-
-:deep(.el-table) {
-    .el-table__body-wrapper {
-        transition: height 0.3s ease;
     }
 }
 

@@ -1,14 +1,14 @@
 const { defineConfig } = require('@vue/cli-service');
 const dotenv = require('dotenv');
-// TerserPlugin 用于压缩 JavaScript
+// TerserPlugin is used to compress JavaScript
 const TerserPlugin = require('terser-webpack-plugin');
-// CompressionPlugin 开启 Gzip 压缩
+// CompressionPlugin enables Gzip compression
 const CompressionPlugin = require('compression-webpack-plugin')
-// BundleAnalyzerPlugin 用于分析打包后的文件
+// BundleAnalyzerPlugin is used to analyze bundled files
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// WorkboxPlugin 用于生成Service Worker
+// WorkboxPlugin is used to generate Service Worker
 const { InjectManifest } = require('workbox-webpack-plugin');
-// 引入 path 模块
+// Import path module
 
 const path = require('path')
  
@@ -16,10 +16,10 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-// 确保加载 .env 文件
+// Ensure loading .env file
 dotenv.config();
 
-// 定义CDN资源列表，确保Service Worker也能访问
+// Define CDN resource list, ensure Service Worker can access it
 const cdnResources = {
   css: [
     'https://unpkg.com/element-ui@2.15.14/lib/theme-chalk/index.css',

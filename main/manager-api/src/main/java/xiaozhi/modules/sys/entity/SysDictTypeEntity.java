@@ -11,18 +11,18 @@ import lombok.EqualsAndHashCode;
 import xiaozhi.common.entity.BaseEntity;
 
 /**
- * 字典类型
+ * Dictionary Type
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("sys_dict_type")
 public class SysDictTypeEntity extends BaseEntity {
     /**
-     * 字典类型编码
+     * Dictionary Type Code
      */
     private String dictType;
     /**
-     * 字典名称
+     * Dictionary Name
      */
     private String dictName;
     /**

@@ -66,12 +66,12 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('Service Worker activated, now controlling pages');
   
-  // 清理旧版本缓存
+  // Clean up old version caches
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.filter(cacheName => {
-          // 清理除当前版本外的缓存
+          // Clean up caches except for the current version
           return cacheName.startsWith('workbox-') && !workbox.core.cacheNames.runtime.includes(cacheName);
         }).map(cacheName => {
           return caches.delete(cacheName);
@@ -81,94 +81,94 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 添加fetch事件拦截器，用于查看CDN资源是否命中缓存
+// Add fetch event interceptor to check if CDN resources hit the cache
 self.addEventListener('fetch', event => {
-  // 只有启用CDN模式时才进行CDN资源缓存监控
+  // Only monitor CDN resource caching when CDN mode is enabled
   if (isCDNEnabled) {
     const url = new URL(event.request.url);
     
-    // 针对CDN资源，输出是否命中缓存的信息
+    // For CDN resources, output information about cache hits
     if ([...CDN_CSS, ...CDN_JS].includes(url.href)) {
-      // 不干扰正常的fetch流程，只添加日志
-      console.log(`请求CDN资源: ${url.href}`);
+      // Don't interfere with normal fetch flow, just add logs
+      console.log(`Requesting CDN resource: ${url.href}`);
     }
   }
 });
 
-// 仅在CDN模式下缓存CDN资源
+// Only cache CDN resources in CDN mode
 if (isCDNEnabled) {
-  // 缓存CDN的CSS资源
+  // Cache CDN CSS resources
   workbox.routing.registerRoute(
     ({ url }) => CDN_CSS.includes(url.href),
     new workbox.strategies.CacheFirst({
       cacheName: 'cdn-stylesheets',
       plugins: [
         new workbox.expiration.ExpirationPlugin({
-          maxAgeSeconds: 365 * 24 * 60 * 60, // 增加到1年缓存
-          maxEntries: 10, // 最多缓存10个CSS文件
+          maxAgeSeconds: 365 * 24 * 60 * 60, // Increase to 1 year cache
+          maxEntries: 10, // Maximum of 10 CSS files cached
         }),
         new workbox.cacheableResponse.CacheableResponsePlugin({
-          statuses: [0, 200], // 缓存成功响应
+          statuses: [0, 200], // Cache successful responses
         }),
       ],
     })
   );
 
-  // 缓存CDN的JS资源
+  // Cache CDN JS resources
   workbox.routing.registerRoute(
     ({ url }) => CDN_JS.includes(url.href),
     new workbox.strategies.CacheFirst({
       cacheName: 'cdn-scripts',
       plugins: [
         new workbox.expiration.ExpirationPlugin({
-          maxAgeSeconds: 365 * 24 * 60 * 60, // 增加到1年缓存
-          maxEntries: 20, // 最多缓存20个JS文件
+          maxAgeSeconds: 365 * 24 * 60 * 60, // Increase to 1 year cache
+          maxEntries: 20, // Maximum of 20 JS files cached
         }),
         new workbox.cacheableResponse.CacheableResponsePlugin({
-          statuses: [0, 200], // 缓存成功响应
+          statuses: [0, 200], // Cache successful responses
         }),
       ],
     })
   );
 }
 
-// 无论是否启用CDN模式，都缓存本地静态资源
+// Cache local static resources regardless of whether CDN mode is enabled
 workbox.routing.registerRoute(
   /\.(?:js|css|png|jpg|jpeg|svg|gif|ico|woff|woff2|eot|ttf|otf)$/,
   new workbox.strategies.StaleWhileRevalidate({
     cacheName: 'static-resources',
     plugins: [
       new workbox.expiration.ExpirationPlugin({
-        maxAgeSeconds: 7 * 24 * 60 * 60, // 7天缓存
-        maxEntries: 50, // 最多缓存50个文件
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days cache
+        maxEntries: 50, // Maximum of 50 files cached
       }),
     ],
   })
 );
 
-// 缓存HTML页面
+// Cache HTML pages
 workbox.routing.registerRoute(
   /\.html$/,
   new workbox.strategies.NetworkFirst({
     cacheName: 'html-cache',
     plugins: [
       new workbox.expiration.ExpirationPlugin({
-        maxAgeSeconds: 1 * 24 * 60 * 60, // 1天缓存
-        maxEntries: 10, // 最多缓存10个HTML文件
+        maxAgeSeconds: 1 * 24 * 60 * 60, // 1 day cache
+        maxEntries: 10, // Maximum of 10 HTML files cached
       }),
     ],
   })
 );
 
-// 离线页面 - 使用更可靠的处理方式
+// Offline page - using a more reliable handling method
 workbox.routing.setCatchHandler(async ({ event }) => {
-  // 根据请求类型返回适当的默认页面
+  // Return appropriate default page based on request type
   switch (event.request.destination) {
     case 'document':
-      // 如果是网页请求，返回离线页面
+      // If it's a webpage request, return the offline page
       return caches.match(OFFLINE_URL);
     default:
-      // 所有其他请求返回错误
+      // All other requests return an error
       return Response.error();
   }
-}); 
+});

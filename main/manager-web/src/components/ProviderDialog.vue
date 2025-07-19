@@ -146,7 +146,7 @@ export default {
         name: [{ required: true, message: 'Please enter provider name', trigger: 'blur' }]
       },
       isAllFieldsSelected: false,
-      tableKey: 0 // 用于强制表格重新渲染
+      tableKey: 0 // Used to force table re-rendering
     };
   },
   computed: {
@@ -285,7 +285,7 @@ export default {
     },
 
     forceTableRerender() {
-      this.tableKey += 1; // 改变key值强制表格重新渲染
+      this.tableKey += 1; // Change key value to force table re-rendering
     },
 
     submit() {

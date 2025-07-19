@@ -11,26 +11,26 @@ import lombok.EqualsAndHashCode;
 import xiaozhi.common.entity.BaseEntity;
 
 /**
- * 参数管理
+ * Parameter Management
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("sys_params")
 public class SysParamsEntity extends BaseEntity {
     /**
-     * 参数编码
+     * Parameter Code
      */
     private String paramCode;
     /**
-     * 参数值
+     * Parameter Value
      */
     private String paramValue;
     /**
-     * 值类型：string-字符串，number-数字，boolean-布尔，array-数组
+     * Value Type: string-String, number-Number, boolean-Boolean, array-Array
      */
     private String valueType;
     /**
-     * 类型 0：系统参数 1：非系统参数
+     * Type 0: System Parameter 1: Non-System Parameter
      */
     private Integer paramType;
     /**
