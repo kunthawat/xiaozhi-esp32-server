@@ -30,7 +30,7 @@ import xiaozhi.modules.device.entity.DeviceEntity;
 import xiaozhi.modules.device.service.DeviceService;
 import xiaozhi.modules.security.user.SecurityUser;
 
-@Tag(name = "设备管理")
+@Tag(name = "Device Management")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/device")
@@ -40,7 +40,7 @@ public class DeviceController {
     private final RedisUtils redisUtils;
 
     @PostMapping("/bind/{agentId}/{deviceCode}")
-    @Operation(summary = "绑定设备")
+    @Operation(summary = "Bind Device")
     @RequiresPermissions("sys:role:normal")
     public Result<Void> bindDevice(@PathVariable String agentId, @PathVariable String deviceCode) {
         deviceService.deviceActivation(agentId, deviceCode);
@@ -48,13 +48,13 @@ public class DeviceController {
     }
 
     @PostMapping("/register")
-    @Operation(summary = "注册设备")
+    @Operation(summary = "Register Device")
     public Result<String> registerDevice(@RequestBody DeviceRegisterDTO deviceRegisterDTO) {
         String macAddress = deviceRegisterDTO.getMacAddress();
         if (StringUtils.isBlank(macAddress)) {
-            return new Result<String>().error(ErrorCode.NOT_NULL, "mac地址不能为空");
+            return new Result<String>().error(ErrorCode.NOT_NULL, "MAC address cannot be empty");
         }
-        // 生成六位验证码
+        // Generate six-digit verification code
         String code = String.valueOf(Math.random()).substring(2, 8);
         String key = RedisKeys.getDeviceCaptchaKey(code);
         String existsMac = null;
@@ -67,7 +67,7 @@ public class DeviceController {
     }
 
     @GetMapping("/bind/{agentId}")
-    @Operation(summary = "获取已绑定设备")
+    @Operation(summary = "Get Bound Devices")
     @RequiresPermissions("sys:role:normal")
     public Result<List<DeviceEntity>> getUserDevices(@PathVariable String agentId) {
         UserDetail user = SecurityUser.getUser();
@@ -76,7 +76,7 @@ public class DeviceController {
     }
 
     @PostMapping("/unbind")
-    @Operation(summary = "解绑设备")
+    @Operation(summary = "Unbind Device")
     @RequiresPermissions("sys:role:normal")
     public Result<Void> unbindDevice(@RequestBody DeviceUnBindDTO unDeviveBind) {
         UserDetail user = SecurityUser.getUser();
@@ -85,16 +85,16 @@ public class DeviceController {
     }
 
     @PutMapping("/update/{id}")
-    @Operation(summary = "更新设备信息")
+    @Operation(summary = "Update Device Information")
     @RequiresPermissions("sys:role:normal")
     public Result<Void> updateDeviceInfo(@PathVariable String id, @Valid @RequestBody DeviceUpdateDTO deviceUpdateDTO) {
         DeviceEntity entity = deviceService.selectById(id);
         if (entity == null) {
-            return new Result<Void>().error("设备不存在");
+            return new Result<Void>().error("Device does not exist");
         }
         UserDetail user = SecurityUser.getUser();
         if (!entity.getUserId().equals(user.getId())) {
-            return new Result<Void>().error("设备不存在");
+            return new Result<Void>().error("Device does not exist");
         }
         BeanUtils.copyProperties(deviceUpdateDTO, entity);
         deviceService.updateById(entity);
@@ -102,7 +102,7 @@ public class DeviceController {
     }
 
     @PostMapping("/manual-add")
-    @Operation(summary = "手动添加设备")
+    @Operation(summary = "Manually Add Device")
     @RequiresPermissions("sys:role:normal")
     public Result<Void> manualAddDevice(@RequestBody @Valid DeviceManualAddDTO dto) {
         UserDetail user = SecurityUser.getUser();

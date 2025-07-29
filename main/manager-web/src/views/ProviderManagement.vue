@@ -3,23 +3,23 @@
     <HeaderBar />
 
     <div class="operation-bar">
-      <h2 class="page-title">字段管理</h2>
+      <h2 class="page-title">Field Management</h2>
       <div class="right-operations">
         <el-dropdown trigger="click" @command="handleSelectModelType" @visible-change="handleDropdownVisibleChange">
           <el-button class="category-btn">
-            类别筛选 {{ selectedModelTypeLabel }}<i class="el-icon-arrow-down el-icon--right"
+            Category Filter {{ selectedModelTypeLabel }}<i class="el-icon-arrow-down el-icon--right"
               :class="{ 'rotate-down': DropdownVisible }"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="">全部</el-dropdown-item>
+            <el-dropdown-item command="">All</el-dropdown-item>
             <el-dropdown-item v-for="item in modelTypes" :key="item.value" :command="item.value">
               {{ item.label }}
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-input placeholder="请输入供应器名称查询" v-model="searchName" class="search-input" @keyup.enter.native="handleSearch"
+        <el-input placeholder="Enter provider name to search" v-model="searchName" class="search-input" @keyup.enter.native="handleSearch"
           clearable />
-        <el-button class="btn-search" @click="handleSearch">搜索</el-button>
+        <el-button class="btn-search" @click="handleSearch">Search</el-button>
       </div>
     </div>
 
@@ -28,24 +28,24 @@
         <div class="content-area">
           <el-card class="provider-card" shadow="never">
             <el-table ref="providersTable" :data="filteredProvidersList" class="transparent-table" v-loading="loading"
-              element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+              element-loading-text="Loading..." element-loading-spinner="el-icon-loading"
               element-loading-background="rgba(255, 255, 255, 0.7)" :header-cell-class-name="headerCellClassName">
-              <el-table-column label="选择" align="center" width="120">
+              <el-table-column label="Select" align="center" width="120">
                 <template slot-scope="scope">
                   <el-checkbox v-model="scope.row.selected"></el-checkbox>
                 </template>
               </el-table-column>
 
-              <el-table-column label="类别" prop="modelType" align="center" width="200">
+              <el-table-column label="Category" prop="modelType" align="center" width="200">
                 <template slot="header" slot-scope="scope">
                   <el-dropdown trigger="click" @command="handleSelectModelType"
                     @visible-change="isDropdownOpen = $event">
                     <span class="dropdown-trigger" :class="{ 'active': isDropdownOpen }">
-                      类别{{ selectedModelTypeLabel }} <i class="dropdown-arrow"
+                      Category{{ selectedModelTypeLabel }} <i class="dropdown-arrow"
                         :class="{ 'is-active': isDropdownOpen }"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item command="">全部</el-dropdown-item>
+                      <el-dropdown-item command="">All</el-dropdown-item>
                       <el-dropdown-item v-for="item in modelTypes" :key="item.value" :command="item.value">
                         {{ item.label }}
                       </el-dropdown-item>
@@ -58,17 +58,17 @@
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column label="供应器编码" prop="providerCode" align="center" width="150"></el-table-column>
-              <el-table-column label="名称" prop="name" align="center"></el-table-column>
-              <el-table-column label="字段配置" align="center">
+              <el-table-column label="Provider Code" prop="providerCode" align="center" width="150"></el-table-column>
+              <el-table-column label="Name" prop="name" align="center"></el-table-column>
+              <el-table-column label="Field Configuration" align="center">
                 <template slot-scope="scope">
                   <el-popover placement="top-start" width="400" trigger="hover">
                     <div v-for="field in scope.row.fields" :key="field.key" class="field-item">
                       <span class="field-label">{{ field.label }}:</span>
                       <span class="field-type">{{ field.type }}</span>
-                      <span v-if="isSensitiveField(field.key)" class="sensitive-tag">敏感</span>
+                      <span v-if="isSensitiveField(field.key)" class="sensitive-tag">Sensitive</span>
                     </div>
-                    <el-button slot="reference" size="mini" type="text">查看字段</el-button>
+                    <el-button slot="reference" size="mini" type="text">View Fields</el-button>
                   </el-popover>
                 </template>
               </el-table-column>

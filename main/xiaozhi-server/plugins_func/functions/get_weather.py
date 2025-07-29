@@ -12,8 +12,8 @@ GET_WEATHER_FUNCTION_DESC = {
     "function": {
         "name": "get_weather",
         "description": (
-            "获取某个地点的天气，用户应提供一个位置，比如用户说杭州天气，参数为：杭州。"
-            "如果用户说的是省份，默认用省会城市。如果用户说的不是省份或城市而是一个地名，默认用该地所在省份的省会城市。"
+            "Get weather for a specific location. User should provide a location, e.g., if user says 'Hangzhou weather', parameter is: Hangzhou. "
+            "If user mentions a province, default to the provincial capital. If user mentions a place name that's not a province or city, default to the provincial capital of that region. "
             "如果用户没有指明地点，说“天气怎么样”，”今天天气如何“，location参数为空"
         ),
         "parameters": {
@@ -21,11 +21,11 @@ GET_WEATHER_FUNCTION_DESC = {
             "properties": {
                 "location": {
                     "type": "string",
-                    "description": "地点名，例如杭州。可选参数，如果不提供则不传",
+                    "description": "Location name, e.g., Hangzhou. Optional parameter, don't pass if not provided",
                 },
                 "lang": {
                     "type": "string",
-                    "description": "返回用户使用的语言code，例如zh_CN/zh_HK/en_US/ja_JP等，默认zh_CN",
+                    "description": "Language code used by user, e.g., zh_CN/zh_HK/en_US/ja_JP etc., default zh_CN",
                 },
             },
             "required": ["lang"],
@@ -40,17 +40,17 @@ HEADERS = {
     )
 }
 
-# 天气代码 https://dev.qweather.com/docs/resource/icons/#weather-icons
+# Weather codes https://dev.qweather.com/docs/resource/icons/#weather-icons
 WEATHER_CODE_MAP = {
-    "100": "晴",
-    "101": "多云",
-    "102": "少云",
-    "103": "晴间多云",
-    "104": "阴",
-    "150": "晴",
-    "151": "多云",
-    "152": "少云",
-    "153": "晴间多云",
+    "100": "Sunny",
+    "101": "Cloudy",
+    "102": "Few Clouds",
+    "103": "Partly Cloudy",
+    "104": "Overcast",
+    "150": "Sunny",
+    "151": "Cloudy",
+    "152": "Few Clouds",
+    "153": "Partly Cloudy",
     "300": "阵雨",
     "301": "强阵雨",
     "302": "雷阵雨",

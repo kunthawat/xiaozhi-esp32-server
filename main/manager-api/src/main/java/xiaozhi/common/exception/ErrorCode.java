@@ -1,11 +1,11 @@
 package xiaozhi.common.exception;
 
 /**
- * 错误编码，由5位数字组成，前2位为模块编码，后3位为业务编码
+ * Error codes, consisting of 5 digits, first 2 digits are module code, last 3 digits are business code
  * <p>
- * 如：10001（10代表系统模块，001代表业务代码）
+ * Example: 10001 (10 represents system module, 001 represents business code)
  * </p>
- * Copyright (c) 人人开源 All rights reserved.
+ * Copyright (c) RenRen Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 public interface ErrorCode {

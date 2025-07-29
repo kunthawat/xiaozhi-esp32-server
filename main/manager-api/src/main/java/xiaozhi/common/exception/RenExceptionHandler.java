@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import xiaozhi.common.utils.Result;
 
 /**
- * 异常处理器
- * Copyright (c) 人人开源 All rights reserved.
+ * Exception Handler
+ * Copyright (c) RenRen Open Source All rights reserved.
  * Website: https://www.renren.io
  */
 @Slf4j
@@ -26,7 +26,7 @@ import xiaozhi.common.utils.Result;
 public class RenExceptionHandler {
 
     /**
-     * 处理自定义异常
+     * Handle custom exceptions
      */
     @ExceptionHandler(RenException.class)
     public Result<Void> handleRenException(RenException ex) {
@@ -62,7 +62,7 @@ public class RenExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public Result<Void> handleNoResourceFoundException(NoResourceFoundException ex) {
         log.warn("Resource not found: {}", ex.getMessage());
-        return new Result<Void>().error(404, "资源不存在");
+        return new Result<Void>().error(404, "Resource does not exist");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -76,7 +76,7 @@ public class RenExceptionHandler {
                 })
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElse("请求参数错误！");
+                .orElse("Request parameter error!");
 
         return new Result<Void>().error(ErrorCode.PARAM_VALUE_NULL, errorMsg);
     }

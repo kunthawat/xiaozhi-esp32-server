@@ -71,34 +71,34 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
                 redisUtils.set(RedisKeys.getAgentDeviceLastConnectedAtById(agentId), new Date());
             }
         } catch (Exception e) {
-            log.error("异步更新设备连接信息失败", e);
+            log.error("Failed to asynchronously update device connection info", e);
         }
     }
 
     @Override
     public Boolean deviceActivation(String agentId, String activationCode) {
         if (StringUtils.isBlank(activationCode)) {
-            throw new RenException("激活码不能为空");
+            throw new RenException("Activation code cannot be empty");
         }
         String deviceKey = "ota:activation:code:" + activationCode;
         Object cacheDeviceId = redisUtils.get(deviceKey);
         if (cacheDeviceId == null) {
-            throw new RenException("激活码错误");
+            throw new RenException("Invalid activation code");
         }
         String deviceId = (String) cacheDeviceId;
         String safeDeviceId = deviceId.replace(":", "_").toLowerCase();
         String cacheDeviceKey = String.format("ota:activation:data:%s", safeDeviceId);
         Map<String, Object> cacheMap = (Map<String, Object>) redisUtils.get(cacheDeviceKey);
         if (cacheMap == null) {
-            throw new RenException("激活码错误");
+            throw new RenException("Invalid activation code");
         }
         String cachedCode = (String) cacheMap.get("activation_code");
         if (!activationCode.equals(cachedCode)) {
-            throw new RenException("激活码错误");
+            throw new RenException("Invalid activation code");
         }
-        // 检查设备有没有被激活
+        // Check if device has been activated
         if (selectById(deviceId) != null) {
-            throw new RenException("设备已激活");
+            throw new RenException("Device already activated");
         }
 
         String macAddress = (String) cacheMap.get("mac_address");
@@ -106,7 +106,7 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         String appVersion = (String) cacheMap.get("app_version");
         UserDetail user = SecurityUser.getUser();
         if (user.getId() == null) {
-            throw new RenException("用户未登录");
+            throw new RenException("User not logged in");
         }
 
         Date currentTime = new Date();
@@ -125,7 +125,7 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         deviceEntity.setLastConnectedAt(currentTime);
         deviceDao.insert(deviceEntity);
 
-        // 清理redis缓存
+        // Clear redis cache
         redisUtils.delete(cacheDeviceKey);
         redisUtils.delete(deviceKey);
         return true;
@@ -139,14 +139,14 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
 
         DeviceEntity deviceById = getDeviceByMacAddress(macAddress);
 
-        // 设备未绑定，则返回当前上传的固件信息（不更新）以此兼容旧固件版本
+        // Device not bound, return current uploaded firmware info (no update) for compatibility with old firmware versions
         if (deviceById == null) {
             DeviceReportRespDTO.Firmware firmware = new DeviceReportRespDTO.Firmware();
             firmware.setVersion(deviceReport.getApplication().getVersion());
             firmware.setUrl(Constant.INVALID_FIRMWARE_URL);
             response.setFirmware(firmware);
         } else {
-            // 只有在设备已绑定且autoUpdate不为0的情况下才返回固件升级信息
+            // Only return firmware upgrade info when device is bound and autoUpdate is not 0
             if (deviceById.getAutoUpdate() != 0) {
                 String type = deviceReport.getBoard() == null ? null : deviceReport.getBoard().getType();
                 DeviceReportRespDTO.Firmware firmware = buildFirmwareInfo(type,
@@ -155,21 +155,21 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
             }
         }
 
-        // 添加WebSocket配置
+        // Add WebSocket configuration
         DeviceReportRespDTO.Websocket websocket = new DeviceReportRespDTO.Websocket();
-        // 从系统参数获取WebSocket URL，如果未配置则使用默认值
+        // Get WebSocket URL from system parameters, use default value if not configured
         String wsUrl = sysParamsService.getValue(Constant.SERVER_WEBSOCKET, true);
         if (StringUtils.isBlank(wsUrl) || wsUrl.equals("null")) {
-            log.error("WebSocket地址未配置，请登录智控台，在参数管理找到【server.websocket】配置");
+            log.error("WebSocket address not configured, please login to control panel and find [server.websocket] configuration in parameter management");
             wsUrl = "ws://xiaozhi.server.com:8000/xiaozhi/v1/";
             websocket.setUrl(wsUrl);
         } else {
             String[] wsUrls = wsUrl.split("\\;");
             if (wsUrls.length > 0) {
-                // 随机选择一个WebSocket URL
+                // Randomly select a WebSocket URL
                 websocket.setUrl(wsUrls[RandomUtil.randomInt(0, wsUrls.length)]);
             } else {
-                log.error("WebSocket地址未配置，请登录智控台，在参数管理找到【server.websocket】配置");
+                log.error("WebSocket address not configured, please login to control panel and find [server.websocket] configuration in parameter management");
                 websocket.setUrl("ws://xiaozhi.server.com:8000/xiaozhi/v1/");
             }
         }
@@ -177,14 +177,14 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         response.setWebsocket(websocket);
 
         if (deviceById != null) {
-            // 如果设备存在，则异步更新上次连接时间和版本信息
+            // If device exists, asynchronously update last connection time and version info
             String appVersion = deviceReport.getApplication() != null ? deviceReport.getApplication().getVersion()
                     : null;
-            // 通过Spring代理调用异步方法
+            // Call async method through Spring proxy
             ((DeviceServiceImpl) AopContext.currentProxy()).updateDeviceConnectionInfo(deviceById.getAgentId(),
                     deviceById.getId(), appVersion);
         } else {
-            // 如果设备不存在，则生成激活码
+            // If device doesn't exist, generate activation code
             DeviceReportRespDTO.Activation code = buildActivation(macAddress, deviceReport);
             response.setActivation(code);
         }

@@ -12,8 +12,8 @@
       </div>
 
       <el-form :model="form" :rules="rules" ref="form" label-width="110px" label-position="left" class="param-form">
-        <el-form-item label="声纹向量" prop="audioId" class="form-item">
-          <el-select v-model="form.audioId" placeholder="请选择一条语言消息" class="custom-select">
+        <el-form-item label="Voice Print Vector" prop="audioId" class="form-item">
+          <el-select v-model="form.audioId" placeholder="Please select a voice message" class="custom-select">
             <el-option v-for="item in valueTypeOptions" :key="item.audioId" :label="item.content" :value="item.audioId">
               <span style="float: left">{{ item.content }}</span>
               <span style="float: right; color: #8492a6; font-size: 13px">
@@ -24,7 +24,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="姓名" prop="sourceName" class="form-item">
+        <el-form-item label="Name" prop="sourceName" class="form-item">
           <el-input v-model="form.sourceName" placeholder="请输入姓名" class="custom-input"></el-input>
         </el-form-item>
 

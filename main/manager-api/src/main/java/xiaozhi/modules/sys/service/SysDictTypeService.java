@@ -10,42 +10,42 @@ import xiaozhi.modules.sys.entity.SysDictTypeEntity;
 import xiaozhi.modules.sys.vo.SysDictTypeVO;
 
 /**
- * 数据字典
+ * Data Dictionary
  */
 public interface SysDictTypeService extends BaseService<SysDictTypeEntity> {
 
     /**
-     * 分页查询字典类型信息
+     * Paginated query of dictionary type information
      *
-     * @param params 查询参数，包含分页信息和查询条件
-     * @return 返回分页的字典类型数据
+     * @param params Query parameters, including pagination information and query conditions
+     * @return Returns paginated dictionary type data
      */
     PageData<SysDictTypeVO> page(Map<String, Object> params);
 
     /**
-     * 根据ID获取字典类型信息
+     * Get dictionary type information by ID
      *
-     * @param id 字典类型ID
-     * @return 返回字典类型对象
+     * @param id Dictionary type ID
+     * @return Returns dictionary type object
      */
     SysDictTypeVO get(Long id);
 
     /**
-     * 保存字典类型信息
+     * Save dictionary type information
      *
-     * @param dto 字典类型数据传输对象
+     * @param dto Dictionary type data transfer object
      */
     void save(SysDictTypeDTO dto);
 
     /**
-     * 更新字典类型信息
+     * Update dictionary type information
      *
-     * @param dto 字典类型数据传输对象
+     * @param dto Dictionary type data transfer object
      */
     void update(SysDictTypeDTO dto);
 
     /**
-     * 删除字典类型信息
+     * Delete dictionary type information
      *
      * @param ids 要删除的字典类型ID数组
      */

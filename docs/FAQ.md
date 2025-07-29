@@ -1,79 +1,78 @@
-# 常见问题 ❓
+# Frequently Asked Questions ❓
 
-### 1、为什么我说的话，小智识别出来很多韩文、日文、英文？🇰🇷
+### 1. Why does XiaoZhi recognize my speech as Korean, Japanese, or English? 🇰🇷
 
-建议：检查一下`models/SenseVoiceSmall`是否已经有`model.pt`
-文件，如果没有就要下载，查看这里[下载语音识别模型文件](Deployment.md#模型文件)
+Suggestion: Check if `models/SenseVoiceSmall` already has the `model.pt` file. If not, you need to download it. See here: [Download Speech Recognition Model Files](Deployment.md#模型文件)
 
-### 2、为什么会出现"TTS 任务出错 文件不存在"？📁
+### 2. Why does "TTS task error file does not exist" appear? 📁
 
-建议：检查一下是否正确使用`conda` 安装了`libopus`和`ffmpeg`库。
+Suggestion: Check if you have correctly installed the `libopus` and `ffmpeg` libraries using `conda`.
 
-如果没有安装，就安装
+If not installed, install them:
 
 ```
 conda install conda-forge::libopus
 conda install conda-forge::ffmpeg
 ```
 
-### 3、TTS 经常失败，经常超时 ⏰
+### 3. TTS frequently fails and times out ⏰
 
-建议：如果 `EdgeTTS` 经常失败，请先检查是否使用了代理（梯子）。如果使用了，请尝试关闭代理后再试；  
-如果用的是火山引擎的豆包 TTS，经常失败时建议使用付费版本，因为测试版本仅支持 2 个并发。
+Suggestion: If `EdgeTTS` frequently fails, first check if you are using a proxy (VPN). If so, try disabling the proxy and try again.  
+If you are using Volcano Engine's Doubao TTS and it frequently fails, it is recommended to use the paid version, as the test version only supports 2 concurrent connections.
 
-### 4、使用Wifi能连接自建服务器，但是4G模式却接不上 🔐
+### 4. Can connect to self-built server using WiFi, but cannot connect in 4G mode 🔐
 
-原因：虾哥的固件，4G模式需要使用安全连接。
+Reason: XiaGe's firmware requires secure connections in 4G mode.
 
-解决方法：目前有两种方法可以解决。任选一种：
+Solution: There are currently two methods to solve this. Choose one:
 
-1、改代码。参考这个视频解决 https://www.bilibili.com/video/BV18MfTYoE85
+1. Modify the code. Refer to this video for solution: https://www.bilibili.com/video/BV18MfTYoE85
 
-2、使用nginx配置ssl证书。参考教程 https://icnt94i5ctj4.feishu.cn/docx/GnYOdMNJOoRCljx1ctecsj9cnRe
+2. Use nginx to configure SSL certificate. Refer to tutorial: https://icnt94i5ctj4.feishu.cn/docx/GnYOdMNJOoRCljx1ctecsj9cnRe
 
-### 5、如何提高小智对话响应速度？ ⚡
+### 5. How to improve XiaoZhi's dialogue response speed? ⚡
 
-本项目默认配置为低成本方案，建议初学者先使用默认免费模型，解决"跑得动"的问题，再优化"跑得快"。  
-如需提升响应速度，可尝试更换各组件。以下为各组件的响应速度测试数据（仅供参考，不构成承诺）：
+This project's default configuration is a low-cost solution. It is recommended that beginners first use the default free models to solve the "can run" problem, then optimize for "runs fast".  
+To improve response speed, you can try replacing various components. The following are response speed test data for each component (for reference only, not a commitment):
 
-| 影响因素  |       因素值        | 
+| Influencing Factor |       Factor Value        | 
 |:-----:|:----------------:|
-| 测试地点  |    广东省广州市海珠区     |
-| 测试时间  | 2025年2月19日 12:52 |
-| 宽带运营商 |       中国联通       |
+| Test Location  |    Haizhu District, Guangzhou, Guangdong Province     |
+| Test Time  | February 19, 2025 12:52 |
+| Broadband Provider |       China Unicom       |
 
-测试方法：
+Test Method:
 
-1、把各组件的密钥配置上去，只有配置了密钥的组件才参与测试。
+1. Configure the API keys for each component. Only components with configured keys will participate in the test.
 
-2、配置完密钥后，执行以下方法
+2. After configuring the keys, execute the following method:
 
 ```
-# 进入项目根目录，执行以下命令：
+# Enter the project root directory and execute the following commands:
 conda activate xiaozhi-esp32-server
 python performance_tester.py 
 ```
 
-生成报告如下
+Generated report as follows:
 
-LLM 性能排行:
+LLM Performance Ranking:
 
-| 模块名称       | 平均首Token时间 | 平均总响应时间 |
+| Module Name    | Average First Token Time | Average Total Response Time |
 |:-----------|:-----------|:--------|
 | AliLLM     | 0.547s     | 1.485s  |
 | ChatGLMLLM | 0.677s     | 3.057s  |
 
-TTS 性能排行:
+TTS Performance Ranking:
 
-| 模块名称                 | 平均合成时间 |
+| Module Name              | Average Synthesis Time |
 |----------------------|--------|
 | EdgeTTS              | 1.019s |
 | DoubaoTTS            | 0.503s |
 | CosyVoiceSiliconflow | 3.732s |
 
-推荐配置组合 (综合响应速度):
+Recommended Configuration Combinations (Overall Response Speed):
 
-| 组合方案                          | 综合得分  | LLM首Token | TTS合成  |
+| Combination Solution                  | Overall Score  | LLM First Token | TTS Synthesis  |
 |-------------------------------|-------|-----------|--------|
 | AliLLM + DoubaoTTS            | 0.539 | 0.547s    | 0.503s |
 | AliLLM + EdgeTTS              | 0.642 | 0.547s    | 1.019s |
@@ -81,49 +80,49 @@ TTS 性能排行:
 | ChatGLMLLM + EdgeTTS          | 0.745 | 0.677s    | 1.019s |
 | AliLLM + CosyVoiceSiliconflow | 1.184 | 0.547s    | 3.732s |
 
-### 结论 🔍
+### Conclusion 🔍
 
-`2025年2月19日`，如果我的电脑在`广东省广州市海珠区`，且使用的是`中国联通`网络，我会优先使用：
+As of `February 19, 2025`, if my computer is in `Haizhu District, Guangzhou, Guangdong Province` and using `China Unicom` network, I would prioritize using:
 
-- LLM：`AliLLM`
-- TTS：`DoubaoTTS`
+- LLM: `AliLLM`
+- TTS: `DoubaoTTS`
 
-### 6、我说话很慢，停顿时小智老是抢话 🗣️
+### 6. I speak slowly, and XiaoZhi always interrupts during pauses 🗣️
 
-建议：在配置文件中找到如下部分，将 `min_silence_duration_ms` 的值调大（例如改为 `1000`）：
+Suggestion: Find the following section in the configuration file and increase the value of `min_silence_duration_ms` (for example, change it to `1000`):
 
 ```yaml
 VAD:
   SileroVAD:
     threshold: 0.5
     model_dir: models/snakers4_silero-vad
-    min_silence_duration_ms: 700  # 如果说话停顿较长，可将此值调大
+    min_silence_duration_ms: 700  # If speech pauses are long, increase this value
 ```
 
-### 7、我想通过小智控制电灯、空调、远程开关机等操作 💡
+### 7. I want to control lights, air conditioning, remote power on/off through XiaoZhi 💡
 
-参考教程[ESP32设备与HomeAssistant集成指南](./homeassistant-integration.md)
+Refer to tutorial: [ESP32 Device and Home Assistant Integration Guide](./homeassistant-integration.md)
 
-### 8、如何开启手机注册智控台 📱
+### 8. How to enable mobile phone registration for the control panel 📱
 
-参考教程[阿里云短信集成指南](./ali-sms-integration.md)
+Refer to tutorial: [Alibaba Cloud SMS Integration Guide](./ali-sms-integration.md)
 
-### 9、如何开启视觉模型实现拍照识物 📷
+### 9. How to enable vision models for photo object recognition 📷
 
-参考教程[视觉模型使用指南](./mcp-vision-integration.md)
+Refer to tutorial: [Vision Model Usage Guide](./mcp-vision-integration.md)
 
-### 10、如何开启MCP接入点 🔧
+### 10. How to enable MCP access points 🔧
 
-1、先参考教程[MCP 接入点部署使用指南](./mcp-endpoint-enable.md)
+1. First refer to tutorial: [MCP Access Point Deployment Usage Guide](./mcp-endpoint-enable.md)
 
-2、再参考教程[MCP 接入点使用指南](./mcp-endpoint-integration.md)
+2. Then refer to tutorial: [MCP Access Point Usage Guide](./mcp-endpoint-integration.md)
 
-### 12、如何开启声纹识别 🔊
+### 12. How to enable voiceprint recognition 🔊
 
-参考教程[声纹识别启用指南](./voiceprint-integration.md)
+Refer to tutorial: [Voiceprint Recognition Enablement Guide](./voiceprint-integration.md)
 
-### 13、更多问题，可联系我们反馈 💬
+### 13. For more questions, you can contact us for feedback 💬
 
-可以在[issues](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues)提交您的问题。
+You can submit your questions in [issues](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues).
 
-也可以发邮件我们取得联系：huangrongzhuang@xin-nan.com
+You can also contact us by email: huangrongzhuang@xin-nan.com

@@ -40,12 +40,12 @@ import xiaozhi.modules.sys.service.SysUserService;
 import xiaozhi.modules.sys.vo.SysDictDataItem;
 
 /**
- * 登录控制层
+ * Login Controller Layer
  */
 @AllArgsConstructor
 @RestController
 @RequestMapping("/user")
-@Tag(name = "登录管理")
+@Tag(name = "Login Management")
 public class LoginController {
     private final SysUserService sysUserService;
     private final SysUserTokenService sysUserTokenService;
@@ -54,26 +54,26 @@ public class LoginController {
     private final SysDictDataService sysDictDataService;
 
     @GetMapping("/captcha")
-    @Operation(summary = "验证码")
+    @Operation(summary = "Verification Code")
     public void captcha(HttpServletResponse response, String uuid) throws IOException {
-        // uuid不能为空
+        // UUID cannot be empty
         AssertUtils.isBlank(uuid, ErrorCode.IDENTIFIER_NOT_NULL);
-        // 生成验证码
+        // Generate verification code
         captchaService.create(response, uuid);
     }
 
     @PostMapping("/smsVerification")
-    @Operation(summary = "短信验证码")
+    @Operation(summary = "SMS Verification Code")
     public Result<Void> smsVerification(@RequestBody SmsVerificationDTO dto) {
-        // 验证图形验证码
+        // Validate graphic verification code
         boolean validate = captchaService.validate(dto.getCaptchaId(), dto.getCaptcha(), true);
         if (!validate) {
-            throw new RenException("图形验证码错误");
+            throw new RenException("Graphic verification code error");
         }
         Boolean isMobileRegister = sysParamsService
                 .getValueObject(Constant.SysMSMParam.SERVER_ENABLE_MOBILE_REGISTER.getValue(), Boolean.class);
         if (!isMobileRegister) {
-            throw new RenException("没有开启手机注册，没法使用短信验证码功能");
+            throw new RenException("Mobile registration is not enabled, SMS verification code function cannot be used");
         }
         // 发送短信验证码
         captchaService.sendSMSValidateCode(dto.getPhone());

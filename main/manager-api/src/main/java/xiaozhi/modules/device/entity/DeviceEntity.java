@@ -15,53 +15,53 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName("ai_device")
-@Schema(description = "设备信息")
+@Schema(description = "Device Information")
 public class DeviceEntity {
 
     @TableId(type = IdType.ASSIGN_UUID)
     @Schema(description = "ID")
     private String id;
 
-    @Schema(description = "关联用户ID")
+    @Schema(description = "Associated User ID")
     private Long userId;
 
-    @Schema(description = "MAC地址")
+    @Schema(description = "MAC Address")
     private String macAddress;
 
-    @Schema(description = "最后连接时间")
+    @Schema(description = "Last Connection Time")
     private Date lastConnectedAt;
 
-    @Schema(description = "自动更新开关(0关闭/1开启)")
+    @Schema(description = "Auto Update Switch (0=Off/1=On)")
     private Integer autoUpdate;
 
-    @Schema(description = "设备硬件型号")
+    @Schema(description = "Device Hardware Model")
     private String board;
 
-    @Schema(description = "设备别名")
+    @Schema(description = "Device Alias")
     private String alias;
 
-    @Schema(description = "智能体ID")
+    @Schema(description = "Agent ID")
     private String agentId;
 
-    @Schema(description = "固件版本号")
+    @Schema(description = "Firmware Version Number")
     private String appVersion;
 
-    @Schema(description = "排序")
+    @Schema(description = "Sort Order")
     private Integer sort;
 
-    @Schema(description = "更新者")
+    @Schema(description = "Updater")
     @TableField(fill = FieldFill.UPDATE)
     private Long updater;
 
-    @Schema(description = "更新时间")
+    @Schema(description = "Update Time")
     @TableField(fill = FieldFill.UPDATE)
     private Date updateDate;
 
-    @Schema(description = "创建者")
+    @Schema(description = "Creator")
     @TableField(fill = FieldFill.INSERT)
     private Long creator;
 
-    @Schema(description = "创建时间")
+    @Schema(description = "Create Time")
     @TableField(fill = FieldFill.INSERT)
     private Date createDate;
 }

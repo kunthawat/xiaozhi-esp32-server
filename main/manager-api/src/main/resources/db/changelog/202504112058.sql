@@ -1,35 +1,35 @@
--- 本文件用于初始化系统参数数据，无需手动执行，在项目启动时会自动执行
+-- This file is used to initialize system parameter data, no manual execution required, will be executed automatically on project startup
 -- --------------------------------------------------------
--- 初始化参数管理配置
+-- Initialize parameter management configuration
 DROP TABLE IF EXISTS sys_params;
--- 参数管理
+-- Parameter management
 create table sys_params
 (
   id                   bigint NOT NULL COMMENT 'id',
-  param_code           varchar(100) COMMENT '参数编码',
-  param_value          varchar(2000) COMMENT '参数值',
-  value_type           varchar(20) default 'string' COMMENT '值类型：string-字符串，number-数字，boolean-布尔，array-数组',
-  param_type           tinyint unsigned default 1 COMMENT '类型   0：系统参数   1：非系统参数',
-  remark               varchar(200) COMMENT '备注',
-  creator              bigint COMMENT '创建者',
-  create_date          datetime COMMENT '创建时间',
-  updater              bigint COMMENT '更新者',
-  update_date          datetime COMMENT '更新时间',
+  param_code           varchar(100) COMMENT 'Parameter Code',
+  param_value          varchar(2000) COMMENT 'Parameter Value',
+  value_type           varchar(20) default 'string' COMMENT 'Value Type: string-String, number-Number, boolean-Boolean, array-Array',
+  param_type           tinyint unsigned default 1 COMMENT 'Type   0: System Parameter   1: Non-system Parameter',
+  remark               varchar(200) COMMENT 'Remark',
+  creator              bigint COMMENT 'Creator',
+  create_date          datetime COMMENT 'Creation Time',
+  updater              bigint COMMENT 'Updater',
+  update_date          datetime COMMENT 'Update Time',
   primary key (id),
   unique key uk_param_code (param_code)
-)ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COMMENT='参数管理';
+)ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COMMENT='Parameter Management';
 
--- 服务器配置
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (100, 'server.ip', '0.0.0.0', 'string', 1, '服务器监听IP地址');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (101, 'server.port', '8000', 'number', 1, '服务器监听端口');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (102, 'server.secret', 'null', 'string', 1, '服务器密钥');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (201, 'log.log_format', '<green>{time:YYMMDD HH:mm:ss}</green>[<light-blue>{version}-{selected_module}</light-blue>][<light-blue>{extra[tag]}</light-blue>]-<level>{level}</level>-<light-green>{message}</light-green>', 'string', 1, '控制台日志格式');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (202, 'log.log_format_file', '{time:YYYY-MM-DD HH:mm:ss} - {version}_{selected_module} - {name} - {level} - {extra[tag]} - {message}', 'string', 1, '文件日志格式');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (203, 'log.log_level', 'INFO', 'string', 1, '日志级别');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (204, 'log.log_dir', 'tmp', 'string', 1, '日志目录');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (205, 'log.log_file', 'server.log', 'string', 1, '日志文件名');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (206, 'log.data_dir', 'data', 'string', 1, '数据目录');
-INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (301, 'delete_audio', 'true', 'boolean', 1, '是否删除使用后的音频文件');
+-- Server configuration
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (100, 'server.ip', '0.0.0.0', 'string', 1, 'Server listening IP address');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (101, 'server.port', '8000', 'number', 1, 'Server listening port');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (102, 'server.secret', 'null', 'string', 1, 'Server secret key');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (201, 'log.log_format', '<green>{time:YYMMDD HH:mm:ss}</green>[<light-blue>{version}-{selected_module}</light-blue>][<light-blue>{extra[tag]}</light-blue>]-<level>{level}</level>-<light-green>{message}</light-green>', 'string', 1, 'Console log format');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (202, 'log.log_format_file', '{time:YYYY-MM-DD HH:mm:ss} - {version}_{selected_module} - {name} - {level} - {extra[tag]} - {message}', 'string', 1, 'File log format');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (203, 'log.log_level', 'INFO', 'string', 1, 'Log level');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (204, 'log.log_dir', 'tmp', 'string', 1, 'Log directory');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (205, 'log.log_file', 'server.log', 'string', 1, 'Log file name');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (206, 'log.data_dir', 'data', 'string', 1, 'Data directory');
+INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (301, 'delete_audio', 'true', 'boolean', 1, 'Whether to delete audio files after use');
 INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (302, 'close_connection_no_voice_time', '120', 'number', 1, '无语音输入断开连接时间(秒)');
 INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (303, 'tts_timeout', '10', 'number', 1, 'TTS请求超时时间(秒)');
 INSERT INTO `sys_params` (id, param_code, param_value, value_type, param_type, remark) VALUES (304, 'enable_wakeup_words_response_cache', 'false', 'boolean', 1, '是否开启唤醒词加速');

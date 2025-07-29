@@ -62,7 +62,7 @@ public class ModelConfigServiceImpl extends BaseServiceImpl<ModelConfigDao, Mode
                         .eq("is_enabled", 1)
                         .like(StringUtils.isNotBlank(modelName), "model_name", "%" + modelName + "%")
                         .select("id", "model_name", "config_json"));
-        // 处理获取到的内容
+        // Process the retrieved content
         return entities.stream().map(item -> {
             LlmModelBasicInfoDTO dto = new LlmModelBasicInfoDTO();
             dto.setId(item.getId());
