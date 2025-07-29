@@ -54,6 +54,7 @@ services:
       - SPRING_DATA_REDIS_HOST=xiaozhi-esp32-server-redis
       - SPRING_DATA_REDIS_PASSWORD=
       - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_LIQUIBASE_CHANGE_LOG=classpath:db/changelog/db.changelog-master.yaml
     volumes:
       # Configuration file directory
       - ./uploadfile:/uploadfile
@@ -62,10 +63,11 @@ services:
     image: mysql:latest
     container_name: xiaozhi-esp32-server-db
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p123456" ]
       timeout: 45s
       interval: 10s
-      retries: 10
+      retries: 15
+      start_period: 30s
     restart: always
     networks:
       - default
