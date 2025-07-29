@@ -15,6 +15,9 @@ INSERT INTO `ai_model_provider` (`id`, `model_type`, `provider_code`, `name`, `f
 ('SYSTEM_TTS_TencentTTS', 'TTS', 'tencent', 'Tencent Text-to-Speech', '[{"key":"appid","label":"Application ID","type":"string"},{"key":"secret_id","label":"Secret ID","type":"string"},{"key":"secret_key","label":"Secret Key","type":"string"},{"key":"output_dir","label":"Output Directory","type":"string"},{"key":"region","label":"Region","type":"string"},{"key":"voice","label":"Voice ID","type":"string"}]', 5, 1, NOW(), 1, NOW());
 
 
+-- Fix ai_tts_voice name column size for English translations
+ALTER TABLE `ai_tts_voice` MODIFY COLUMN `name` VARCHAR(100) COMMENT '音色名称';
+
 -- Add Edge TTS voices
 delete from `ai_tts_voice` where id in ('TTS_EdgeTTS0001', 'TTS_EdgeTTS0002', 'TTS_EdgeTTS0003', 'TTS_EdgeTTS0004', 'TTS_EdgeTTS0005', 'TTS_EdgeTTS0006', 'TTS_EdgeTTS0007', 'TTS_EdgeTTS0008', 'TTS_EdgeTTS0009', 'TTS_EdgeTTS0010', 'TTS_EdgeTTS0011');
 INSERT INTO `ai_tts_voice` VALUES 
