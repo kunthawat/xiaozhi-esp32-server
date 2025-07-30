@@ -1,13 +1,13 @@
 /* global self, workbox */
 
-// 自定义Service Worker安装和激活的处理逻辑
+// Custom Service Worker installation and activation handling logic
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
 });
 
-// CDN资源列表
+// CDN resource list
 const CDN_CSS = [
   'https://unpkg.com/element-ui@2.15.14/lib/theme-chalk/index.css',
   'https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'
@@ -22,17 +22,17 @@ const CDN_JS = [
   'https://unpkg.com/opus-decoder@0.7.7/dist/opus-decoder.min.js'
 ];
 
-// 当Service Worker被注入manifest后会自动执行
+// Automatically executed when Service Worker is injected with manifest
 const manifest = self.__WB_MANIFEST || [];
 
-// 检查是否启用CDN模式
+// Check if CDN mode is enabled
 const isCDNEnabled = manifest.some(entry => 
   entry.url === 'cdn-mode' && entry.revision === 'enabled'
 );
 
-console.log(`Service Worker 已初始化, CDN模式: ${isCDNEnabled ? '启用' : '禁用'}`);
+console.log(`Service Worker initialized, CDN mode: ${isCDNEnabled ? 'enabled' : 'disabled'}`);
 
-// 注入workbox相关代码
+// Inject workbox related code
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 workbox.setConfig({ debug: false });
 

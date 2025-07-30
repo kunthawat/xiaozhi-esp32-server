@@ -1,175 +1,133 @@
-# Translation Guide for Xiaozhi ESP32 Server
+# Translation Guide
 
 ## Overview
 
-This document provides guidelines for maintaining the English-only codebase of the Xiaozhi ESP32 Server project. All Chinese text has been systematically translated to English to improve international accessibility and maintainability.
+This document provides guidance for maintaining the English-only codebase of the xiaozhi-esp32-server project. All Chinese text has been systematically translated to English to ensure international accessibility.
 
 ## Translation Principles
 
-### 1. Consistency
-- Use consistent terminology across all files
-- Maintain technical accuracy in translations
+### 1. Technical Accuracy
+- Preserve technical terminology and functionality
+- Maintain API contract integrity
+- Ensure database relationships remain intact
+
+### 2. Consistency
+- Use standardized translations for common terms
+- Maintain consistent UI/UX terminology
 - Follow established naming conventions
 
-### 2. Clarity
-- Prioritize clear, understandable English over literal translations
-- Use standard technical terminology where applicable
-- Avoid ambiguous or overly complex phrasing
-
-### 3. Context Preservation
-- Maintain the original meaning and intent
-- Preserve technical specifications and requirements
-- Keep functional behavior unchanged
+### 3. Functionality Preservation
+- All features must continue to work after translation
+- No breaking changes to existing integrations
+- Maintain backward compatibility where possible
 
 ## Key Translation Mappings
 
-### Technical Terms
+### Common UI Terms
+- `登录` → `Login`
+- `用户名` → `Username`
+- `密码` → `Password`
+- `验证码` → `Verification Code`
+- `注册` → `Register`
+- `忘记密码` → `Forgot Password`
+
+### System Management Terms
 - `设备管理` → `Device Management`
 - `用户管理` → `User Management`
 - `参数管理` → `Parameter Management`
 - `OTA管理` → `OTA Management`
 - `服务端管理` → `Server Management`
 - `固件管理` → `Firmware Management`
-- `声纹识别` → `Voice Print Recognition`
-- `语音识别` → `Speech Recognition`
-- `智控台` → `Control Panel`
 
-### Common UI Elements
-- `搜索` → `Search`
-- `添加` → `Add`
-- `编辑` → `Edit`
-- `删除` → `Delete`
-- `保存` → `Save`
-- `取消` → `Cancel`
-- `确认` → `Confirm`
-- `选择` → `Select`
-- `查看` → `View`
+### Technical Terms
+- `数据库` → `Database`
 - `配置` → `Configuration`
+- `服务` → `Service`
+- `接口` → `Interface/API`
+- `模型` → `Model`
+- `控制器` → `Controller`
 
-### Status Messages
-- `成功` → `Success`
-- `失败` → `Failed`
-- `错误` → `Error`
-- `警告` → `Warning`
-- `加载中` → `Loading`
-- `处理中` → `Processing`
+## File Categories Translated
 
-## File Types Translated
+### 1. Documentation
+- `README.md` - Main project documentation
+- `README_en.md` - English documentation
+- All markdown files in `docs/` directory
 
-### 1. Documentation Files
-- **README.md**: Main project documentation
-- **README_en.md**: English documentation (cleaned up)
-- **docs/**: All markdown files in documentation directory
+### 2. Backend Code
+- Java source files (`main/manager-api/src/**/*.java`)
+- Internationalization files (`i18n/*.properties`)
+- Database migration files (`db/changelog/*.sql`)
 
-### 2. Frontend Code (Vue.js)
-- **Vue Components**: All `.vue` files
-- **JavaScript Files**: All `.js` files
-- **Router Configuration**: Navigation and routing
-- **UI Text**: Buttons, labels, messages, placeholders
+### 3. Frontend Code
+- Vue.js components (`main/manager-web/src/**/*.vue`)
+- JavaScript utilities (`main/manager-web/src/**/*.js`)
+- Router configurations
 
-### 3. Backend Code (Java)
-- **Service Classes**: Comments and JavaDoc
-- **Controller Classes**: API documentation and comments
-- **Entity Classes**: Field descriptions and comments
-- **Configuration Files**: YAML and properties files
-- **Test Files**: Test descriptions and assertions
+### 4. Configuration Files
+- YAML configuration files
+- Shell scripts and deployment files
+- Docker configurations
 
-### 4. Database Schema
-- **SQL Migration Files**: Comments and descriptions
-- **Table Comments**: Column and table descriptions
-- **Configuration Data**: System parameters and descriptions
+## Guidelines for Contributors
 
-### 5. Python Server Code
-- **Function Descriptions**: API and function documentation
-- **Comments**: Inline and block comments
-- **Log Messages**: Error and info messages
-- **Configuration**: YAML comments and descriptions
+### Adding New Features
+1. **Use English Only**: All new code, comments, and documentation must be in English
+2. **Follow Naming Conventions**: Use descriptive English names for variables, functions, and classes
+3. **Update Documentation**: Ensure all new features are documented in English
 
-### 6. Build and Deployment
-- **Dockerfiles**: Build stage descriptions and comments
-- **Shell Scripts**: Comments and echo messages
-- **Docker Compose**: Service descriptions and comments
+### Code Comments
+- Write clear, concise comments in English
+- Explain complex business logic
+- Document API endpoints and parameters
+- Include examples where helpful
 
-## Guidelines for Future Development
+### UI Text
+- Use clear, user-friendly English for all UI elements
+- Maintain consistency with existing terminology
+- Consider text length for responsive design
+- Test with different screen sizes
 
-### 1. New Code Requirements
-- **All new code MUST be written in English**
-- Comments, documentation, and user-facing text must be in English
-- Variable names and function names should use English terminology
-- Error messages and log outputs must be in English
+### Error Messages
+- Provide clear, actionable error messages in English
+- Include relevant context for debugging
+- Use consistent error message formats
+- Avoid technical jargon in user-facing messages
 
-### 2. Code Review Checklist
-- [ ] No Chinese characters in comments or strings
-- [ ] Consistent terminology with existing codebase
-- [ ] Clear and understandable English
-- [ ] Proper grammar and spelling
-- [ ] Technical accuracy maintained
+## Testing Checklist
 
-### 3. Documentation Standards
-- Use clear, concise English
-- Follow standard technical writing conventions
-- Include examples where appropriate
-- Maintain consistent formatting and style
+When adding new features or modifying existing code:
 
-### 4. User Interface Guidelines
-- Use standard UI terminology
-- Keep text concise and actionable
-- Ensure accessibility compliance
-- Test with English-speaking users
+- [ ] All text is in English
+- [ ] UI elements display correctly
+- [ ] Error messages are clear and helpful
+- [ ] Documentation is updated
+- [ ] No Chinese characters in code or comments
+- [ ] Functionality works as expected
+- [ ] Responsive design is maintained
 
-## Translation Tools and Resources
+## Common Pitfalls to Avoid
 
-### Recommended Tools
-- **IDE Extensions**: Grammar and spell checkers
-- **Translation Memory**: Maintain consistency across translations
-- **Technical Dictionaries**: For specialized terminology
-
-### Reference Resources
-- **Technical Documentation**: Industry-standard terminology
-- **Style Guides**: Consistent writing style
-- **Accessibility Guidelines**: Inclusive language practices
-
-## Quality Assurance
-
-### Testing Requirements
-- **Functional Testing**: Ensure all features work correctly
-- **UI Testing**: Verify proper display of English text
-- **Integration Testing**: Test complete user workflows
-- **Accessibility Testing**: Ensure compliance with standards
-
-### Review Process
-1. **Code Review**: Check for Chinese text in new code
-2. **Translation Review**: Verify accuracy and consistency
-3. **Functional Testing**: Ensure no broken functionality
-4. **User Acceptance**: Test with English-speaking users
+1. **Mixed Languages**: Don't mix Chinese and English in the same context
+2. **Literal Translations**: Avoid word-for-word translations that don't make sense in English
+3. **Technical Accuracy**: Don't change technical terms that have established English equivalents
+4. **UI Layout**: Consider that English text may be longer than Chinese text
+5. **Cultural Context**: Adapt content for international audiences
 
 ## Maintenance
 
-### Regular Audits
-- Periodic scans for Chinese text in codebase
-- Review of new dependencies for language issues
-- Update of translation mappings as needed
-- Documentation updates for new features
+### Regular Checks
+- Scan codebase for any new Chinese text: `grep -r "[\u4e00-\u9fff]" src/`
+- Review pull requests for language consistency
+- Update translation mappings as needed
+- Test UI with English text lengths
 
-### Issue Resolution
-- **Chinese Text Found**: Immediate translation required
-- **Inconsistent Terminology**: Update to match established mappings
-- **Unclear Translations**: Revise for clarity and accuracy
+### Tools and Resources
+- Use regex pattern `[\u4e00-\u9fff]` to find Chinese characters
+- Leverage IDE search and replace for bulk translations
+- Use translation tools for technical accuracy
+- Consult technical dictionaries for specialized terms
 
-## Contact and Support
+## Contact
 
-For questions about translations or to report Chinese text found in the codebase:
-1. Create an issue in the project repository
-2. Tag with "translation" label
-3. Provide specific file and line references
-4. Suggest appropriate English translation
-
-## Conclusion
-
-Maintaining an English-only codebase improves:
-- **International Accessibility**: Broader developer community
-- **Code Maintainability**: Easier for global teams
-- **Documentation Quality**: Clearer technical communication
-- **Professional Standards**: Industry best practices
-
-All contributors are expected to follow these guidelines to maintain the quality and accessibility of the Xiaozhi ESP32 Server project.
+For questions about translation decisions or to report issues with existing translations, please create an issue in the project repository with the label "translation".
