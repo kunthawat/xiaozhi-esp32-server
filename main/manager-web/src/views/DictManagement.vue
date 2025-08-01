@@ -3,37 +3,37 @@
         <HeaderBar />
 
         <div class="operation-bar">
-            <h2 class="page-title">字典管理</h2>
+            <h2 class="page-title">Dictionary Management</h2>
             <div class="action-group">
                 <div class="search-group">
-                    <el-input placeholder="请输入字典值标签查询" v-model="search" class="search-input" clearable
+                    <el-input placeholder="Please enter dictionary value label to search" v-model="search" class="search-input" clearable
                         @keyup.enter.native="handleSearch" style="width: 240px" />
                     <el-button class="btn-search" @click="handleSearch">
-                        搜索
+                        Search
                     </el-button>
                 </div>
             </div>
         </div>
 
-        <!-- 主体内容 -->
+        <!-- Main content -->
         <div class="main-wrapper">
             <div class="content-panel">
-                <!-- 左侧字典类型列表 -->
+                <!-- Left dictionary type list -->
                 <div class="dict-type-panel">
                     <div class="dict-type-header">
-                        <el-button type="success" size="mini" @click="showAddDictTypeDialog">新增字典类型</el-button>
+                        <el-button type="success" size="mini" @click="showAddDictTypeDialog">Add Dictionary Type</el-button>
                         <el-button type="danger" size="mini" @click="batchDeleteDictType"
                             :disabled="selectedDictTypes.length === 0">
-                            批量删除字典类型
+                            Batch Delete Dictionary Types
                         </el-button>
                     </div>
                     <el-table ref="dictTypeTable" :data="dictTypeList" style="width: 100%" v-loading="dictTypeLoading"
-                        element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+                        element-loading-text="Loading..." element-loading-spinner="el-icon-loading"
                         element-loading-background="rgba(255, 255, 255, 0.7)" @row-click="handleDictTypeRowClick"
                         @selection-change="handleDictTypeSelectionChange" :row-class-name="tableRowClassName"
                         class="dict-type-table">
                         <el-table-column type="selection" width="55" align="center"></el-table-column>
-                        <el-table-column label="字典类型名称" prop="dictName" align="center"></el-table-column>
+                        <el-table-column label="Dictionary Type Name" prop="dictName" align="center"></el-table-column>
                         <el-table-column label="操作" width="100" align="center">
                             <template slot-scope="scope">
                                 <el-button type="text" size="mini" @click.stop="editDictType(scope.row)">编辑</el-button>

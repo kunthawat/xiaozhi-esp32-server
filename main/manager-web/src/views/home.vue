@@ -1,19 +1,19 @@
 <template>
   <div class="welcome">
-    <!-- 公共头部 -->
+    <!-- Common header -->
     <HeaderBar :devices="devices" @search="handleSearch" @search-reset="handleSearchReset" />
     <el-main style="padding: 20px;display: flex;flex-direction: column;">
       <div>
-        <!-- 首页内容 -->
+        <!-- Home page content -->
         <div class="add-device">
           <div class="add-device-bg">
             <div class="hellow-text" style="margin-top: 30px;">
-              你好，小智
+              Hello, Xiaozhi
             </div>
             <div class="hellow-text">
-              让我们度过
+              Let's have
               <div style="display: inline-block;color: #5778FF;">
-                美好的一天！
+                a wonderful day!
               </div>
             </div>
             <div class="hi-hint">
@@ -21,7 +21,7 @@
             </div>
             <div class="add-device-btn">
               <div class="left-add" @click="showAddDialog">
-                添加智能体
+                Add Agent
               </div>
               <div style="width: 23px;height: 13px;background: #5778ff;margin-left: -10px;" />
               <div class="right-add">
@@ -92,7 +92,7 @@ export default {
       this.addDeviceDialogVisible = true
     },
     goToRoleConfig() {
-      // 点击配置角色后跳转到角色配置页
+      // Navigate to role configuration page after clicking configure role
       this.$router.push('/role-config')
     },
     handleWisdomBodyAdded(res) {
@@ -122,7 +122,7 @@ export default {
         return this.searchRegex.test(device.agentName);
       });
     },
-    // 搜索更新智能体列表
+    // Search and update agent list
     handleSearchResult(filteredList) {
       this.devices = filteredList; // 更新设备列表
     },

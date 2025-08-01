@@ -6,45 +6,45 @@
       <h2 class="page-title">{{ modelTypeText }}</h2>
       <div class="action-group">
         <div class="search-group">
-          <el-input placeholder="请输入模型名称查询" v-model="search" class="search-input" clearable
+          <el-input placeholder="Please enter model name to search" v-model="search" class="search-input" clearable
             @keyup.enter.native="handleSearch" style="width: 240px" />
           <el-button class="btn-search" @click="handleSearch">
-            搜索
+            Search
           </el-button>
         </div>
       </div>
     </div>
 
-    <!-- 主体内容 -->
+    <!-- Main content -->
     <div class="main-wrapper">
       <div class="content-panel">
-        <!-- 左侧导航 -->
+        <!-- Left navigation -->
         <el-menu :default-active="activeTab" class="nav-panel" @select="handleMenuSelect"
           style="background-size: cover; background-position: center;">
           <el-menu-item index="vad">
-            <span class="menu-text">语言活动检测</span>
+            <span class="menu-text">Voice Activity Detection</span>
           </el-menu-item>
           <el-menu-item index="asr">
-            <span class="menu-text">语音识别</span>
+            <span class="menu-text">Speech Recognition</span>
           </el-menu-item>
           <el-menu-item index="llm">
-            <span class="menu-text">大语言模型</span>
+            <span class="menu-text">Large Language Model</span>
           </el-menu-item>
           <el-menu-item index="vllm">
-            <span class="menu-text">视觉大模型</span>
+            <span class="menu-text">Vision Large Model</span>
           </el-menu-item>
           <el-menu-item index="intent">
-            <span class="menu-text">意图识别</span>
+            <span class="menu-text">Intent Recognition</span>
           </el-menu-item>
           <el-menu-item index="tts">
-            <span class="menu-text">语音合成</span>
+            <span class="menu-text">Text-to-Speech</span>
           </el-menu-item>
           <el-menu-item index="memory">
-            <span class="menu-text">记忆</span>
+            <span class="menu-text">Memory</span>
           </el-menu-item>
         </el-menu>
 
-        <!-- 右侧内容 -->
+        <!-- Right content -->
         <div class="content-area">
           <el-card class="model-card" shadow="never">
             <el-table ref="modelTable" style="width: 100%" v-loading="loading" element-loading-text="拼命加载中"
