@@ -68,21 +68,24 @@ class ASRProvider(ASRProviderBase):
             self.model_path = model_files["model.int8.onnx"]
             self.tokens_path = model_files["tokens.txt"]
 
+            # 初始化模型
+            with CaptureOutput():
+                self.model = sherpa_onnx.OfflineRecognizer.from_dolphin_ctc(
+                    model=self.model_path,
+                    tokens=self.tokens_path,
+                    num_threads=2,
+                    sample_rate=16000,
+                    feature_dim=80,
+                    decoding_method="greedy_search",
+                    debug=False,
+#                   use_itn=True,
+                )
+
         except Exception as e:
             logger.bind(tag=TAG).error(f"模型文件处理失败: {str(e)}")
             raise
 
-        with CaptureOutput():
-            self.model = sherpa_onnx.OfflineRecognizer.from_sense_voice(
-                model=self.model_path,
-                tokens=self.tokens_path,
-                num_threads=2,
-                sample_rate=16000,
-                feature_dim=80,
-                decoding_method="greedy_search",
-                debug=False,
-                use_itn=True,
-            )
+
 
     def read_wave(self, wave_filename: str) -> Tuple[np.ndarray, int]:
         """

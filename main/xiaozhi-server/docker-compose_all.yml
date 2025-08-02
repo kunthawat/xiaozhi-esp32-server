@@ -5,7 +5,7 @@ services:
   # Server Module
   xiaozhi-esp32-server:
     build:
-      context: ../..
+      context: ../xiaozhi-esp32-server/
       dockerfile: Dockerfile-server
     container_name: xiaozhi-esp32-server
     depends_on:
@@ -26,13 +26,15 @@ services:
     volumes:
       # Configuration file directory
       - ./data:/opt/xiaozhi-esp32-server/data
+      - ./models/sherpa/sherpa-onnx-dolphin-base-ctc-multi-lang-int8-2025-04-02:/opt/xiaozhi-esp32-server/models/sherpa-onnx-dolphin-base-ctc-multi-lang-int8-2025-04-02
+
       # Model file mounting, very important
       - ./models/SenseVoiceSmall/model.pt:/opt/xiaozhi-esp32-server/models/SenseVoiceSmall/model.pt
 
   # Manager-API and Manager-Web Modules
   xiaozhi-esp32-server-web:
     build:
-      context: ../..
+      context: ../xiaozhi-esp32-server/
       dockerfile: Dockerfile-web
     container_name: xiaozhi-esp32-server-web
     restart: always
