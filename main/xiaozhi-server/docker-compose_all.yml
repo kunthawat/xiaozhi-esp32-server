@@ -1,11 +1,10 @@
 # Docker安装全模块
 
+version: '3'
 services:
   # Server模块
   xiaozhi-esp32-server:
-    build:
-      context: ../../
-      dockerfile: Dockerfile-server
+    image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:server_latest
     container_name: xiaozhi-esp32-server
     depends_on:
       - xiaozhi-esp32-server-db
@@ -21,7 +20,7 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - TZ=Asia/Bangkok
+      - TZ=Asia/Shanghai
     volumes:
       # 配置文件目录
       - ./data:/opt/xiaozhi-esp32-server/data
@@ -30,9 +29,7 @@ services:
 
   # manager-api和manager-web模块
   xiaozhi-esp32-server-web:
-    build:
-      context: ../../
-      dockerfile: Dockerfile-web
+    image: ghcr.nju.edu.cn/xinnan-tech/xiaozhi-esp32-server:web_latest
     container_name: xiaozhi-esp32-server-web
     restart: always
     networks:
@@ -46,7 +43,7 @@ services:
       # 智控台
       - "8002:8002"
     environment:
-      - TZ=Asia/Bangkok
+      - TZ=Asia/Shanghai
       - SPRING_DATASOURCE_DRUID_URL=jdbc:mysql://xiaozhi-esp32-server-db:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&connectTimeout=30000&socketTimeout=30000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
       - SPRING_DATASOURCE_DRUID_USERNAME=root
       - SPRING_DATASOURCE_DRUID_PASSWORD=123456
