@@ -21,7 +21,7 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Asia/Bangkok
     volumes:
       # 配置文件目录
       - ./data:/opt/xiaozhi-esp32-server/data
@@ -46,7 +46,7 @@ services:
       # 智控台
       - "8002:8002"
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Asia/Bangkok
       - SPRING_DATASOURCE_DRUID_URL=jdbc:mysql://xiaozhi-esp32-server-db:3306/xiaozhi_esp32_server?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true&connectTimeout=30000&socketTimeout=30000&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
       - SPRING_DATASOURCE_DRUID_USERNAME=root
       - SPRING_DATASOURCE_DRUID_PASSWORD=123456
